@@ -1,14 +1,39 @@
 const functions = require('firebase-functions');
-const app = require('express')();                   // express allows you to have end points with the same name but do different things
+const express = require('express');
 const cors = require('cors');
+const app = express();
+app.use(cors({origin: true}));
 
-// import handlers
-const { auth } = require('./handlers/actions');
+const client_id = "590b668627a84848bef50731584143d4";
+const client_secret = "d2774fe9334d458d84b999d6065bc5ba";
+const redirect_uri = "localhost:3000";
 
-// used for cross platform errors after deploying
-app.use(cors());
+var querystring = require('querystring');
+var stateKey = 'spotify_auth_state';
 
-// Routes
-app.get('/authentication', auth);
+var generateRandomString = function(length) {
+    var text = '';
+    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  
+    for (var i = 0; i < length; i++) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    return text;
+};
+
+app.get('/getCredentials', (req, res) => {
+    
+    var state = generateRandomString(16);
+    res.cookie(stateKey, state);
+    var scope = 'user-read-private user-read-email';
+
+    res.status(200).send({
+        client_id, 
+        client_secret,
+        redirect_uri,
+        scope,
+        state
+    });
+})
 
 exports.api = functions.https.onRequest(app);
