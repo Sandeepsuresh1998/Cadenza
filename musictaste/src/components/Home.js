@@ -5,17 +5,22 @@ class Home extends Component {
         super(props)
 
         this.state = {
-            
+            loggedIn: false, 
+            accessToken: '',
         }
+    }
+
+    componentDidMount() {
+        // Parse Access Token
     }
 
     render() {
         return (
             <div className="container">
-                <h1>Home</h1>
+                <h1 color="white">Home</h1>
             </div>
         )
     }
 }
 
-export default Home
+export default Home;
