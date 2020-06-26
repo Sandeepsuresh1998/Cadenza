@@ -14,7 +14,7 @@ class Landing extends Component {
 
     handleClick() {
         // Hit our login server
-        window.location.href = "https://spotifybackend.herokuapp.com/";
+        window.location.href = "https://spotifybackend.herokuapp.com/login";
     }
 
     render() {

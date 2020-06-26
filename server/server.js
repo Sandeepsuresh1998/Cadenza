@@ -3,10 +3,18 @@ var request = require('request'); // "Request" library
 var cors = require('cors');
 var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
-
+var bodyParser = require('body-parser');
 var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var redirect_uri =  process.env.REDIRECT_URI || 'http://localhost:8888/callback'; // Your redirect uri
+var SpotifyWebApi = require('spotify-web-api-node');
+
+//Creating an instance of the api we are going to hit 
+var spotifyApi = new SpotifyWebApi({
+  clientId: client_id,
+  clientSecret: client_secret, 
+  redirectUri: redirect_uri
+})
 
 /**
  * Generates a random string containing numbers and letters
@@ -26,12 +34,13 @@ var generateRandomString = function(length) {
 var stateKey = 'spotify_auth_state';
 
 var app = express();
-
 app.use(express.static(__dirname + '/public'))
    .use(cors())
    .use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/login', function(req, res) {
+app.get('/login', (req, res) =>  {
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -48,7 +57,7 @@ app.get('/login', function(req, res) {
     }));
 });
 
-app.get('/callback', function(req, res) {
+app.get('/callback', (req, res) =>  {
 
   // your application requests refresh and access tokens
   // after checking the state parameter
@@ -112,7 +121,7 @@ app.get('/callback', function(req, res) {
   }
 });
 
-app.get('/refresh_token', function(req, res) {
+app.get('/refresh_token', (req, res) =>  {
 
   // requesting access token from refresh token
   var refresh_token = req.query.refresh_token;
@@ -134,6 +143,25 @@ app.get('/refresh_token', function(req, res) {
       });
     }
   });
+});
+
+app.get('/myInfo', (req, res) =>  {
+  // Get a users' top artists
+  const accessToken = req.query.accessToken;
+  if(!accessToken) {
+    return res.status(500).send("Can't find access token");
+  }
+
+  // Set the accessToken
+  spotifyApi.setAccessToken(accessToken);
+
+  //Get the top tracks
+  spotifyApi.getMe().then((data) => {
+    console.log(data);
+    // TODO: Error checking
+    res.send(data).status(200);
+  })
+
 });
 
 app.listen(process.env.PORT || 8888);
