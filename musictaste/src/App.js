@@ -12,31 +12,16 @@ class App extends Component{
 
   constructor(props) {
     super(props);
-    this.handleClick = this.handleClick.bind(this);
   }
 
-  handleClick() {
-    axios.get("/getCredentials").then((res) => {
-      // Once we get credentials back redirect to spotify authorize
-      console.log("State: " + res.data.state)
-      window.location = 'https://accounts.spotify.com/authorize?' +
-        querystring.stringify({
-          response_type: 'code',
-          client_id: res.data.client_id,
-          scope: res.data.scope,
-          redirect_uri: res.data.redirect_uri,
-          state: res.data.state
-        });
-    });
 
-  };
 
   render() {
     return (
       <div className="App">
         <FadeInLeft>
           <h1 className="header">Music Taste</h1>
-          <button onClick={this.handleClick}className="loginButton">Login</button>
+          <button className="loginButton"><a href="localhost:8888/login">Login</a></button>
         </FadeInLeft>
       </div>
     );
