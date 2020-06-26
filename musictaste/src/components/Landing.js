@@ -1,17 +1,20 @@
 import React, { Component } from 'react'
 import styled, { keyframes } from 'styled-components';
 import {fadeInLeft} from 'react-animations';
+import {Redirect} from 'react-router-dom';
 import '../styles/Landing.css'; //CSS 
 
 const FadeInLeft = styled.div`animation: 2s ${keyframes`${fadeInLeft}`}`;
 
 class Landing extends Component {
     constructor(props) {
-        super(props)
-        this.state = {
-            loggedIn: false, 
-            accessToken: '',
-        }
+        super(props);
+        this.handleClick = this.handleClick.bind(this);
+    }
+
+    handleClick() {
+        // Hit our login server
+        window.location.href = "http://localhost:8888/login";
     }
 
     render() {
@@ -19,7 +22,7 @@ class Landing extends Component {
             <div className="LoginPage">
                 <FadeInLeft>
                     <h1 className="header">Music Taste</h1>
-                    <button className="loginButton"><a href="localhost:8888/login">Login</a></button>
+                    <button onClick={this.handleClick} className="loginButton">Login</button>
                 </FadeInLeft>
             </div>
         )
