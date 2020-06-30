@@ -8,7 +8,7 @@ var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var redirect_uri =  process.env.REDIRECT_URI || 'http://localhost:8888/callback'; // Your redirect uri
 var SpotifyWebApi = require('spotify-web-api-node');
-import axios from 'axios';
+var axios = require('axios');
 
 //Creating an instance of the api we are going to hit 
 var spotifyApi = new SpotifyWebApi({
