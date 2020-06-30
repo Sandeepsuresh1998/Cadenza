@@ -4,7 +4,9 @@ import axios from 'axios'
 import "../styles/Home.css";
 import Navbar from 'react-bootstrap/Navbar'
 
-//axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
+axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
+// axios.defaults.baseURL = "https://localhost:8888";
+
 
 
 class Home extends Component {
@@ -74,7 +76,11 @@ class Home extends Component {
 
     // Get a user's playlist
     getPlaylists() {
-        axios.get('https://localhost:8888/getPlaylists').then((res) => {
+        axios.get('/getPlaylists', {
+            params: {
+                "accessToken": this.state.accessToken,  
+            }
+        }).then((res) => {
             console.log(res);
         })
     }
@@ -86,9 +92,17 @@ class Home extends Component {
                     <h1 style={{color: "#1DB954"}} className="header">Hello {this.state.name}</h1>
                 </div>
                 <div className="homeContainer">
-                    <img src={this.state.image} />
-                    <h1>{this.state.name}</h1>
-                    <h1>{this.state.email}</h1>
+                    <div className="info">
+                        <h1>Your Info</h1>
+                        <img className="profile" src={this.state.image} />
+                        <h1>{this.state.name}</h1>
+                        <h1>{this.state.email}</h1>
+                    </div>
+
+                    <div className="playlistContainer">
+                        <h1>My Playlists</h1>
+                    </div>
+                    
                     <button onClick={this.getPlaylists}>Playlist</button>
                 </div>
             </div>
