@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import styled, { keyframes } from 'styled-components';
 import {fadeInLeft} from 'react-animations';
-import {Redirect} from 'react-router-dom';
 import '../styles/Landing.css'; //CSS 
 
 const FadeInLeft = styled.div`animation: 2s ${keyframes`${fadeInLeft}`}`;
