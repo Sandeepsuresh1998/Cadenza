@@ -176,7 +176,11 @@ app.get('/getPlaylists', (req, res) => {
   }
 
   axios.get("https://api.spotify.com/v1/me/playlists", config).then((data) => {
+
       return res.send(data);
+  }).catch((err) => {
+      console.log(err);
+      return err;
   });
 
 });
