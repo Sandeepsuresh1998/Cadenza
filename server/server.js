@@ -180,7 +180,7 @@ app.get('/getPlaylists', (req, res) => {
       return res.send(data);
   }).catch((err) => {
       console.log(err);
-      return err;
+      return res.status(500).send(err);
   });
 
 });
