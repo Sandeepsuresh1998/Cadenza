@@ -8,6 +8,7 @@ var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var redirect_uri =  process.env.REDIRECT_URI || 'http://localhost:8888/callback'; // Your redirect uri
 var SpotifyWebApi = require('spotify-web-api-node');
+import axios from 'axios';
 
 //Creating an instance of the api we are going to hit 
 var spotifyApi = new SpotifyWebApi({
@@ -172,7 +173,7 @@ app.get('/getPlaylists', (req, res) => {
 
   //Create header
   const config = {
-    headers: {Authorization : `Bearer ${accessToken}`}
+    headers: {Authorization : `Bearer {accessToken}`}
   }
 
   axios.get("https://api.spotify.com/v1/me/playlists", config).then((data) => {
