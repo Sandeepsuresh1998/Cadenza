@@ -173,14 +173,14 @@ app.get('/getPlaylists', (req, res) => {
 
   //Create header
   const config = {
-    headers: {Authorization : `Bearer {accessToken}`}
+    headers: {Authorization : `Bearer ${accessToken}`}
   }
 
   axios.get("https://api.spotify.com/v1/me/playlists", config).then((data) => {
       
       res.send("There was something weird that happened");
   }).catch((err) => {
-      console.log("We caught something" + err.json());
+      console.log("We caught something" + err;
       return res.status(500).send(err);
   });
 
