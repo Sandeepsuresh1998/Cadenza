@@ -179,7 +179,7 @@ app.get('/getPlaylists', (req, res) => {
       
       res.send("There was something weird that happened");
   }).catch((err) => {
-      console.log(err);
+      console.log("We caught something" + err.json());
       return res.status(500).send(err);
   });
 
