@@ -3,8 +3,8 @@ import queryString from 'query-string';
 import axios from 'axios'
 import "../styles/Home.css";
 import Navbar from 'react-bootstrap/Navbar'
-// axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
 
+//axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
 
 
 class Home extends Component {
@@ -16,9 +16,11 @@ class Home extends Component {
             refreshToken: '',
             name: '',
             email: '', 
-            pictureUrl: ''
+            userID: '',
+            image: ''
         }
         this.topArtists = this.topArtists.bind(this);
+        this.getPlaylists = this.getPlaylists.bind(this);
     }
 
     componentDidMount() {
@@ -31,7 +33,7 @@ class Home extends Component {
 
         // Get user info
         // TODO: Make this more expansive and add more details to page
-        axios.get('http://localhost:8888/myInfo', {
+        axios.get('/myInfo', {
             params: {
                 "accessToken": parsed.access_token,    
             }  
@@ -40,25 +42,42 @@ class Home extends Component {
                 const info = res.data.body;
                 this.setState({
                     name: info.display_name, 
-                    email: info.email
+                    email: info.email,
+                    userID: info.id
                 })
-                console.log(info.images);
+                if(info.images) {
+                    //Set the image url if there is one
+                    this.setState({
+                        image: info.images[0].url,
+                    })
+                }
             }
         })
 
         
     }
 
+
+    // Get info
+    // TODO: Change to get top artists and tracks
     topArtists() {
         console.log(this.state.accessToken);
-        axios.get('http://localhost:8888/myInfo', {
+        axios.get('/myInfo', {
             params: {
                 "accessToken": this.state.accessToken,  
             }
-            
+        }).then((data) => {
+            console.log(data);
         })
     }
 
+
+    // Get a user's playlist
+    getPlaylists() {
+        axios.get('https://localhost:8888/getPlaylists').then((res) => {
+            console.log(res);
+        })
+    }
 
     render() {
         return (
@@ -67,10 +86,10 @@ class Home extends Component {
                     <h1 style={{color: "#1DB954"}} className="header">Hello {this.state.name}</h1>
                 </div>
                 <div className="homeContainer">
-                    <h1 color="blue">Home</h1>
+                    <img src={this.state.image} />
                     <h1>{this.state.name}</h1>
                     <h1>{this.state.email}</h1>
-                    <button onClick={this.topArtists}>Artists</button>
+                    <button onClick={this.getPlaylists}>Playlist</button>
                 </div>
             </div>
         )

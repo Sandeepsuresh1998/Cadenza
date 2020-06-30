@@ -164,7 +164,7 @@ app.get('/myInfo', (req, res) =>  {
 
 });
 
-app.get('/myPlaylists', (req, res) => { 
+app.get('/getPlaylists', (req, res) => { 
   const accessToken = req.query.accessToken;
   if(!accessToken) {
     return res.status(500).send("Can't find access token");
@@ -178,7 +178,7 @@ app.get('/myPlaylists', (req, res) => {
   axios.get("https://api.spotify.com/v1/me/playlists", config).then((data) => {
       return res.send(data);
   });
-  
+
 });
 
 

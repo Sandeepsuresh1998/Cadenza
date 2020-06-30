@@ -4,11 +4,14 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: black;
+    background-color: white;
 }
 .headerContainer {
     display: flex;
-    background-color: black;
+    flex-direction: row;
+    justify-content: center;
+    padding-top: 25px;
+    background-color: white;
 }
 
 h1 {
