@@ -178,11 +178,11 @@ app.get('/getPlaylists', (req, res) => {
     headers: {Authorization : `Bearer ${accessToken}`}
   }
 
-  axios.get("https://api.spotify.com/v1/me/playlists", config).then((data) => {
+  axios.get("https://api.spotify.com/v1/me/playlists", config).then((response) => {
       // Fixing problem of circular json not sure why this is needed
-      let json = CircularJSON.stringify(data);
+      // let json = CircularJSON.stringify(data);
       console.log("Request went fine");
-      return res.send(json).status(200);
+      return res.send(response.data).status(200);
   }).catch((err) => {
       console.log("We caught something" + err);
       return res.status(500).send(err);
