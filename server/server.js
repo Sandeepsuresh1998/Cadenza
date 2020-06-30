@@ -46,7 +46,7 @@ app.get('/login', (req, res) =>  {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email';
+  var scope = 'user-read-private user-read-email user-top-read user-read-recently-played playlist-read-private';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -163,5 +163,23 @@ app.get('/myInfo', (req, res) =>  {
   })
 
 });
+
+app.get('/myPlaylists', (req, res) => { 
+  const accessToken = req.query.accessToken;
+  if(!accessToken) {
+    return res.status(500).send("Can't find access token");
+  }
+
+  //Create header
+  const config = {
+    headers: {Authorization : `Bearer ${accessToken}`}
+  }
+
+  axios.get("https://api.spotify.com/v1/me/playlists", config).then((data) => {
+      return res.send(data);
+  });
+  
+});
+
 
 app.listen(process.env.PORT || 8888);
