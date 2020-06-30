@@ -9,6 +9,8 @@ var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var redirect_uri =  process.env.REDIRECT_URI || 'http://localhost:8888/callback'; // Your redirect uri
 var SpotifyWebApi = require('spotify-web-api-node');
 var axios = require('axios');
+const CircularJSON = require('circular-json');
+
 
 //Creating an instance of the api we are going to hit 
 var spotifyApi = new SpotifyWebApi({
@@ -177,8 +179,10 @@ app.get('/getPlaylists', (req, res) => {
   }
 
   axios.get("https://api.spotify.com/v1/me/playlists", config).then((data) => {
+      // Fixing problem of circular json not sure why this is needed
+      let json = CircularJSON.stringify(data);
       console.log("Request went fine");
-      return res.send(data).status(200);
+      return res.send(json).status(200);
   }).catch((err) => {
       console.log("We caught something" + err);
       return res.status(500).send(err);
