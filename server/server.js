@@ -190,5 +190,26 @@ app.get('/getPlaylists', (req, res) => {
 
 });
 
+// Get top artists
+app.get('/getTopArtists', (req,res) => {
+  const accessToken = req.query.accessToken;
+  if(!accessToken) {
+    return res.status(500).send("Can't find access token");
+  }
+
+  //Create header
+  const config = {
+    headers: {Authorization : `Bearer ${accessToken}`}
+  }
+
+  axios.get("https://api.spotify.com/v1/me/top/artists", config).then((response) => {
+    return res.send(response);
+  }).catch((err) => {
+    console.log("Error" + err);
+    return res.send(err);
+  });
+  
+});
+
 
 app.listen(process.env.PORT || 8888);

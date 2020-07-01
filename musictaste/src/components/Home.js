@@ -105,6 +105,7 @@ class Home extends Component {
                     
                     <button onClick={this.getPlaylists}>Playlist</button>
                 </div>
+                <p>{this.state.accessToken}</p>
             </div>
         )
     }
