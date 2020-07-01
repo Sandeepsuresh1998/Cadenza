@@ -75,10 +75,38 @@ class Home extends Component {
 
 
     // Get a user's playlist
+    // TODO: Create UI
+    // TODO: Set State
+    // TODO: Component did mount call
     getPlaylists() {
         axios.get('/getPlaylists', {
             params: {
                 "accessToken": this.state.accessToken,  
+            }
+        }).then((res) => {
+
+            console.log(res);
+        })
+    }
+
+    //Get a user's artists
+    // TODO: Create UI
+    // TODO: Set State
+    // TODO: Component did mount call
+    getTopArtists() {
+        axios.get('/getTopArtists', {
+            params: {
+                "accessToken": this.state.accessToken,  
+            }
+        }).then((res) => {
+            console.log(res);
+        })
+    }
+
+    getTopSongs() {
+        axios.get('/getTopTracks', {
+            params: {
+                "accessToken": this.state.accessToken
             }
         }).then((res) => {
             console.log(res);
