@@ -203,12 +203,13 @@ app.get('/getTopArtists', (req,res) => {
   }
 
   axios.get("https://api.spotify.com/v1/me/top/artists", config).then((response) => {
-    return res.send(response);
+    console.log("Got top artists");
+    return res.send(response.data).status(200);
   }).catch((err) => {
     console.log("Error" + err);
     return res.send(err);
   });
-  
+
 });
 
 
