@@ -226,7 +226,7 @@ app.get('/getTopTracks', (req,res) => {
 
   // TODO: Make this variable passed in during the request
   let params = {
-    time_range : 'short_term'
+    'time_range' : 'short_term',
   }
 
 
