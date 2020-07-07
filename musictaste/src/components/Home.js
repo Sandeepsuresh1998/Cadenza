@@ -16,6 +16,8 @@ class Home extends Component {
             loggedIn: false, 
             accessToken: '',
             refreshToken: '',
+            topTracks: [],
+            topArtists: [], 
             name: '',
             email: '', 
             userID: '',
@@ -23,6 +25,9 @@ class Home extends Component {
         }
         this.topArtists = this.topArtists.bind(this);
         this.getPlaylists = this.getPlaylists.bind(this);
+        this.getTopTracks = this.getTopTracks.bind(this);
+        this.getMyInfo = this.getMyInfo.bind(this);
+        this.getTopArtists = this.getTopArtists.bind(this);
     }
 
     componentDidMount() {
@@ -31,13 +36,32 @@ class Home extends Component {
         this.setState({
             accessToken: parsed.access_token,
             refreshToken: parsed.refresh_token
-        }) 
+        }, () => {
+            //Functions to call after accessToken and refreshToken have been set
+
+            //Get personal info
+            this.getMyInfo();
+
+            //Set top tracks 
+            this.getTopTracks();
+
+            //Set Top Artists
+            this.getTopArtists();
+            
+        });
 
         // Get user info
         // TODO: Make this more expansive and add more details to page
+        
+        
+    }
+
+
+    getMyInfo() {
+        console.log("Fetching my information");
         axios.get('/myInfo', {
             params: {
-                "accessToken": parsed.access_token,    
+                "accessToken": this.state.accessToken,    
             }  
         }).then((res) => {
             if(res.status == 200) {
@@ -55,21 +79,21 @@ class Home extends Component {
                 }
             }
         })
-
-        
-    }
+    }   
 
 
     // Get info
     // TODO: Change to get top artists and tracks
     topArtists() {
         console.log(this.state.accessToken);
-        axios.get('/myInfo', {
+        axios.get('/getTopArtists', {
             params: {
                 "accessToken": this.state.accessToken,  
             }
-        }).then((data) => {
-            console.log(data);
+        }).then((res) => {
+            this.setState({
+                topArtists: res.data.items
+            })
         })
     }
 
@@ -90,8 +114,6 @@ class Home extends Component {
     }
 
     //Get a user's artists
-    // TODO: Create UI
-    // TODO: Set State
     // TODO: Component did mount call
     getTopArtists() {
         axios.get('/getTopArtists', {
@@ -99,17 +121,24 @@ class Home extends Component {
                 "accessToken": this.state.accessToken,  
             }
         }).then((res) => {
-            console.log(res);
+            console.log(res.data.items)
+            this.setState({
+                topArtists: res.data.items
+            })
         })
     }
 
-    getTopSongs() {
+    // TODO: Component did mount call
+    // TODO: Error checking on response
+    getTopTracks() {
         axios.get('/getTopTracks', {
             params: {
                 "accessToken": this.state.accessToken
             }
         }).then((res) => {
-            console.log(res);
+            this.setState({
+                topTracks: res.data.items
+            }) 
         })
     }
 
@@ -128,10 +157,27 @@ class Home extends Component {
                     </div>
 
                     <div className="playlistContainer">
-                        <h1>My Playlists</h1>
+                    </div>
+
+                    <div className="tracksContainer">
+                        <h1>My Top Tracks</h1>
+                        <ul>
+                            {this.state.topTracks.map(listitem => (
+                            <li key={listitem.id}>{listitem.name + " - " + listitem.artists[0].name}</li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <div className="artistsContainer">
+                        <h1>My Top Artists</h1>
+                        <ul>
+                            {this.state.topArtists.map(listitem => (
+                            <li key={listitem.id}>{listitem.name}</li>
+                            ))}
+                        </ul>
                     </div>
                     
-                    <button onClick={this.getPlaylists}>Playlist</button>
+                    <button onClick={this.getTopArtists}>Playlist</button>
                 </div>
                 <p>{this.state.accessToken}</p>
             </div>

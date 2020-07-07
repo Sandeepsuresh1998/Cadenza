@@ -225,12 +225,14 @@ app.get('/getTopTracks', (req,res) => {
   }
 
   // TODO: Make this variable passed in during the request
-  // let params = {
-  //   'time_range' : 'short_term',
-  // }
+  let data = {
+    params: {
+      'time_range' : 'short_term',
+    }
+  }
 
 
-  axios.get("https://api.spotify.com/v1/me/top/tracks", config).then((response) => {
+  axios.get("https://api.spotify.com/v1/me/top/tracks", data, config).then((response) => {
     console.log("Got top artists");
     return res.send(response.data).status(200);
   }).catch((err) => {
