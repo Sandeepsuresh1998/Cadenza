@@ -10,6 +10,7 @@ var redirect_uri =  process.env.REDIRECT_URI || 'http://localhost:8888/callback'
 var SpotifyWebApi = require('spotify-web-api-node');
 var axios = require('axios');
 const CircularJSON = require('circular-json');
+const { query } = require('express');
 
 
 //Creating an instance of the api we are going to hit 
@@ -219,6 +220,13 @@ app.get('/getTopTracks', (req,res) => {
     return res.status(500).send("Can't find access token");
   }
 
+
+  // TODO: Change default to medium term
+  let queryTimeRange = 'short_term'
+  if(req.query.timeRange) {
+    queryTimeRange = req.queryTimeRange;
+  }
+
   //Create header
   const config = {
     headers: {Authorization : `Bearer ${accessToken}`},
@@ -232,7 +240,7 @@ app.get('/getTopTracks', (req,res) => {
   }
 
 
-  axios.get("https://api.spotify.com/v1/me/top/tracks", data, config).then((response) => {
+  axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + queryTimeRange, config).then((response) => {
     console.log("Got top artists");
     return res.send(response.data).status(200);
   }).catch((err) => {
