@@ -192,7 +192,7 @@ class Home extends Component {
                     </div>
                     
                 </div>
-                <button onClick={this.state.getNowPlaying}>Now Playing</button>
+                <button onClick={this.getNowPlaying}>Now Playing</button>
                 <p>{this.state.accessToken}</p>
             </div>
         )

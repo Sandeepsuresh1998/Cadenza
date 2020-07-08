@@ -202,9 +202,8 @@ app.get('/getNowPlaying', (req, res) => {
     headers: {Authorization : `Bearer ${accessToken}`}
   }
 
-  axios.get("https://api.spotify.com/v1/me/player/currently-playing", config).then((res) => {
-    console.log(res);
-    return res.send(res);
+  axios.get("https://api.spotify.com/v1/me/player/currently-playing", config).then((response) => {
+    return res.send(response);
   }).catch((err) => {
     console.log(err);
     return res.send(err);
