@@ -21,7 +21,9 @@ class Home extends Component {
             name: '',
             email: '', 
             userID: '',
-            image: ''
+            image: '',
+            isPlaying: false, 
+            currenlyPlaying: {}, 
         }
         this.topArtists = this.topArtists.bind(this);
         this.getPlaylists = this.getPlaylists.bind(this);
@@ -48,6 +50,8 @@ class Home extends Component {
 
             //Set Top Artists
             this.getTopArtists();
+
+            this.getNowPlaying();
             
         });
 
@@ -66,7 +70,18 @@ class Home extends Component {
                 "accessToken": this.state.accessToken,    
             }  
         }).then((res) => {
-            console.log(res);
+            // Get Now playing 
+            console.log(res)
+            if(res) {
+                this.setState({
+                    isPlaying: true,
+                    currenlyPlaying: res.data.item.name
+                })
+            } else {
+                this.setState({
+                    isPlaying: false,
+                })
+            }
         })
     }
 
@@ -161,6 +176,10 @@ class Home extends Component {
             <div className="root">
                 <div className="headerContainer">
                     <h1 style={{color: "#1DB954"}} className="header">Hello {this.state.name}</h1>
+                    {this.state.isPlaying ?
+                        <h1>Now Playing: {this.state.currenlyPlaying}</h1> :
+                        null
+                    }
                 </div>
                 <div className="homeContainer">
                     <div className="info">
@@ -190,6 +209,8 @@ class Home extends Component {
                             ))}
                         </ul>
                     </div>
+
+
                     
                 </div>
                 <button onClick={this.getNowPlaying}>Now Playing</button>

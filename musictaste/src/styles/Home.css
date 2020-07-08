@@ -8,8 +8,9 @@
 }
 .headerContainer {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
     padding-top: 25px;
     background-color: white;
 }
