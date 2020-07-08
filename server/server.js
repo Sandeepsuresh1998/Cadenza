@@ -50,7 +50,7 @@ app.get('/login', (req, res) =>  {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email user-top-read user-read-recently-played playlist-read-private';
+  var scope = 'user-read-private user-read-email user-top-read user-read-recently-played playlist-read-private user-read-currently-playing';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -190,6 +190,25 @@ app.get('/getPlaylists', (req, res) => {
   });
 
 });
+
+app.get('/getNowPlaying', (req, res) => {
+  const accessToken = req.query.accessToken;
+  if(!accessToken) {
+    return res.status(500).send("Can't find access token");
+  }
+
+  //Create header
+  const config = {
+    headers: {Authorization : `Bearer ${accessToken}`}
+  }
+
+  axios.get("https://api.spotify.com/v1/me/player/currently-playing", config).then((res) => {
+    console.log(res);
+  }).catch((err) => {
+    console.log(err);
+    return res.send(err);
+  });
+})
 
 // Get top artists
 app.get('/getTopArtists', (req,res) => {

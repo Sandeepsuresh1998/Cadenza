@@ -28,6 +28,7 @@ class Home extends Component {
         this.getTopTracks = this.getTopTracks.bind(this);
         this.getMyInfo = this.getMyInfo.bind(this);
         this.getTopArtists = this.getTopArtists.bind(this);
+        this.getNowPlaying = this.getNowPlaying.bind(this);
     }
 
     componentDidMount() {
@@ -53,6 +54,12 @@ class Home extends Component {
         // Get user info
         // TODO: Make this more expansive and add more details to page
         
+        
+    }
+
+
+    // Currently Playing Track
+    getNowPlaying() {
         
     }
 
@@ -177,7 +184,6 @@ class Home extends Component {
                         </ul>
                     </div>
                     
-                    <button onClick={this.getTopArtists}>Playlist</button>
                 </div>
                 <p>{this.state.accessToken}</p>
             </div>
