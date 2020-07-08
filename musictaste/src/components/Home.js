@@ -60,7 +60,14 @@ class Home extends Component {
 
     // Currently Playing Track
     getNowPlaying() {
-        
+        console.log("Now Playing")
+        axios.get('/getNowPlaying', {
+            params: {
+                "accessToken": this.state.accessToken,    
+            }  
+        }).then((res) => {
+            console.log(res);
+        })
     }
 
 
@@ -185,6 +192,7 @@ class Home extends Component {
                     </div>
                     
                 </div>
+                <button onClick={this.state.getNowPlaying}>Now Playing</button>
                 <p>{this.state.accessToken}</p>
             </div>
         )
