@@ -203,7 +203,8 @@ app.get('/getNowPlaying', (req, res) => {
   }
 
   axios.get("https://api.spotify.com/v1/me/player/currently-playing", config).then((response) => {
-    return res.send(response);
+    console.log(response)
+    return res.send(response.data);
   }).catch((err) => {
     console.log(err);
     return res.send(err);
