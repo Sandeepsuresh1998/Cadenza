@@ -1,0 +1,8 @@
+.track-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.track-container h1 {
+    padding-left: 25px;
+}

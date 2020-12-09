@@ -4,7 +4,7 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
-    background-color: white;
+    background-color: #282828;
 }
 .headerContainer {
     display: flex;
@@ -12,7 +12,7 @@
     justify-content: center;
     align-items: center;
     padding-top: 25px;
-    background-color: white;
+    background-color: #282828;
 }
 .info {
     display: flex;
@@ -33,4 +33,8 @@
 
 h1 {
     color: #1DB954
+}
+
+ul {
+    color: white
 }

@@ -11,6 +11,16 @@ var SpotifyWebApi = require('spotify-web-api-node');
 var axios = require('axios');
 const CircularJSON = require('circular-json');
 const { query } = require('express');
+var admin = require("firebase-admin");
+var serviceAccount = require("./musictaste-8ca96-firebase-adminsdk-tnkge-cf9e068aa9.json");
+
+// Initializing database access
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://musictaste-8ca96.firebaseio.com"
+});
+
+const db = admin.firestore();
 
 
 //Creating an instance of the api we are going to hit 
@@ -45,6 +55,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/login', (req, res) =>  {
+
+  console.log('Hit login')
 
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
@@ -96,6 +108,14 @@ app.get('/callback', (req, res) =>  {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
+
+        // TODO: Add user to db if not already there
+        // TODO: If user exists, update last time signed in. 
+        // TODO: If user exists, run suite of information grabs.
+
+        
+
+
         var options = {
           url: 'https://api.spotify.com/v1/me',
           headers: { 'Authorization': 'Bearer ' + access_token },
@@ -105,6 +125,8 @@ app.get('/callback', (req, res) =>  {
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
           console.log(body);
+          
+          db.collection()
         });
 
         // we can also pass the token to the browser to make requests from there
@@ -269,6 +291,7 @@ app.get('/getTopTracks', (req,res) => {
   });
 
 });
+
 
 
 app.listen(process.env.PORT || 8888);

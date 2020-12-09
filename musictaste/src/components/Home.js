@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import axios from 'axios'
 import "../styles/Home.css";
 import Navbar from 'react-bootstrap/Navbar'
+import TrackPreview from './TrackPreview';
 
 axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
 // axios.defaults.baseURL = "https://localhost:8888";
@@ -58,7 +59,6 @@ class Home extends Component {
         // Get user info
         // TODO: Make this more expansive and add more details to page
         
-        
     }
 
 
@@ -71,11 +71,16 @@ class Home extends Component {
             }  
         }).then((res) => {
             // Get Now playing 
-            console.log(res)
-            if(res) {
+            // TODO: Make now playing dynamic and error robust
+            if(res.data) {
+                console.log(res.data.item)
                 this.setState({
                     isPlaying: true,
-                    currenlyPlaying: res.data.item.name
+                    currenlyPlaying: {
+                        name: res.data.item.name, 
+                        album_img: res.data.item.album.images[0].url,
+                        artists: res.data.item.artists
+                    }
                 })
             } else {
                 this.setState({
@@ -86,6 +91,7 @@ class Home extends Component {
     }
 
 
+    //Get basic user info 
     getMyInfo() {
         console.log("Fetching my information");
         axios.get('/myInfo', {
@@ -174,10 +180,26 @@ class Home extends Component {
     render() {
         return (
             <div className="root">
+                {/* This is some navbar code I'll come back to */}
+                {/* <Navbar bg="black">
+                    <Navbar.Brand href="/home">
+                        <img 
+                            src={this.state.image}
+                            width="30"
+                            height="30"
+                            className="d-inline-block align-top"
+                        />
+                    </Navbar.Brand>
+                </Navbar> */}
                 <div className="headerContainer">
-                    <h1 style={{color: "#1DB954"}} className="header">Hello {this.state.name}</h1>
+                    <h1 style={{color: "#1DB954"}} className="header">Sounds</h1>
                     {this.state.isPlaying ?
-                        <h1>Now Playing: {this.state.currenlyPlaying}</h1> :
+                        
+                        <TrackPreview 
+                            name={this.state.currenlyPlaying.name} 
+                            album_img={this.state.currenlyPlaying.album_img}
+                            artists={this.state.currenlyPlaying.artists}
+                        /> :
                         null
                     }
                 </div>
@@ -213,7 +235,7 @@ class Home extends Component {
 
                     
                 </div>
-                <button onClick={this.getNowPlaying}>Now Playing</button>
+                <button onClick={this.getNowPlaying}>Playlist</button>
                 <p>{this.state.accessToken}</p>
             </div>
         )

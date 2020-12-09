@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import styled, { keyframes } from 'styled-components';
 import {fadeInLeft} from 'react-animations';
 import '../styles/Landing.css'; //CSS 
+import axios from 'axios';
 
 const FadeInLeft = styled.div`animation: 2s ${keyframes`${fadeInLeft}`}`;
 
