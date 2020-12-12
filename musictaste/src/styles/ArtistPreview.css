@@ -1,0 +1,9 @@
+.artist-container {
+    display: flex;
+    flex-direction: row;
+    margin: 25px;
+}
+
+.artist-container h1 {
+    padding-left: 25px;
+}

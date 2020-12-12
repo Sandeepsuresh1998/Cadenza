@@ -4,6 +4,7 @@ import axios from 'axios'
 import "../styles/Home.css";
 import Navbar from 'react-bootstrap/Navbar'
 import TrackPreview from './TrackPreview';
+import ArtistPreview from './ArtistPreview';
 
 axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
 // axios.defaults.baseURL = "https://localhost:8888";
@@ -64,7 +65,6 @@ class Home extends Component {
 
     // Currently Playing Track
     getNowPlaying() {
-        console.log("Now Playing")
         axios.get('/getNowPlaying', {
             params: {
                 "accessToken": this.state.accessToken,    
@@ -73,7 +73,6 @@ class Home extends Component {
             // Get Now playing 
             // TODO: Make now playing dynamic and error robust
             if(res.data) {
-                console.log("Now playing image url: " + res.data.item.album.images[0].url);
                 this.setState({
                     isPlaying: true,
                     currenlyPlaying: {
@@ -143,7 +142,6 @@ class Home extends Component {
                 "accessToken": this.state.accessToken,  
             }
         }).then((res) => {
-
             console.log(res);
         })
     }
@@ -208,7 +206,7 @@ class Home extends Component {
                     {/* 
                         This is a container that keeps profile information 
                         not needed for design rn
-                        
+
                         <div className="info">
                             <h1>Your Info</h1>
                             <img className="profile" src={this.state.image} />
@@ -239,7 +237,7 @@ class Home extends Component {
                         <h1>My Top Artists</h1>
                         <ul>
                             {this.state.topArtists.map(listitem => (
-                            <li key={listitem.id}>{listitem.name}</li>
+                                <ArtistPreview key={listitem.id} name={listitem.name} img={listitem.images[0].url}/>
                             ))}
                         </ul>
                     </div>
@@ -247,7 +245,7 @@ class Home extends Component {
 
                     
                 </div>
-                <button onClick={this.getNowPlaying}>Playlist</button>
+                <button onClick={this.getTopArtists}>Playlist</button>
                 <p>{this.state.accessToken}</p>
             </div>
         )
