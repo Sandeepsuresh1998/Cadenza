@@ -73,7 +73,7 @@ class Home extends Component {
             // Get Now playing 
             // TODO: Make now playing dynamic and error robust
             if(res.data) {
-                console.log(res.data.item)
+                console.log("Now playing image url: " + res.data.item.album.images[0].url);
                 this.setState({
                     isPlaying: true,
                     currenlyPlaying: {
@@ -171,6 +171,7 @@ class Home extends Component {
                 "accessToken": this.state.accessToken
             }
         }).then((res) => {
+            console.log(res.data.items);
             this.setState({
                 topTracks: res.data.items
             }) 
@@ -194,7 +195,6 @@ class Home extends Component {
                 <div className="headerContainer">
                     <h1 style={{color: "#1DB954"}} className="header">Sounds</h1>
                     {this.state.isPlaying ?
-                        
                         <TrackPreview 
                             name={this.state.currenlyPlaying.name} 
                             album_img={this.state.currenlyPlaying.album_img}
@@ -204,21 +204,33 @@ class Home extends Component {
                     }
                 </div>
                 <div className="homeContainer">
-                    <div className="info">
-                        <h1>Your Info</h1>
-                        <img className="profile" src={this.state.image} />
-                        <h1>{this.state.name}</h1>
-                        <h1>{this.state.email}</h1>
-                    </div>
+
+                    {/* 
+                        This is a container that keeps profile information 
+                        not needed for design rn
+                        
+                        <div className="info">
+                            <h1>Your Info</h1>
+                            <img className="profile" src={this.state.image} />
+                            <h1>{this.state.name}</h1>
+                            <h1>{this.state.email}</h1>
+                        </div>
+                    */}
+                    
 
                     <div className="playlistContainer">
                     </div>
 
                     <div className="tracksContainer">
-                        <h1>My Top Tracks</h1>
+                        <h1>Current Bumps</h1>
                         <ul>
                             {this.state.topTracks.map(listitem => (
-                            <li key={listitem.id}>{listitem.name + " - " + listitem.artists[0].name}</li>
+                                <TrackPreview 
+                                    key={listitem.id} 
+                                    name={listitem.name} 
+                                    artists={listitem.artists}
+                                    album_img={listitem.album.images[0].url}
+                                />
                             ))}
                         </ul>
                     </div>

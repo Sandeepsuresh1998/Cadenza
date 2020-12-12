@@ -8,7 +8,7 @@ class TrackPreview extends PureComponent {
         this.state = {
            name: "", 
            album_img: "", 
-           artists: [], 
+           artist: ""
         }
     }
     
@@ -16,11 +16,15 @@ class TrackPreview extends PureComponent {
         this.setState({
             name: this.props.name,
             album_img: this.props.album_img, 
-            artist: this.props.artists[0].name,
             imgMult: this.props.imgMult,
         })
+        
+        if(this.props.artists) {
+            this.setState({
+                artist: this.props.artists[0].name
+            })
+        }
 
-        console.log(this.props.artists[0].name);
     }
 
 

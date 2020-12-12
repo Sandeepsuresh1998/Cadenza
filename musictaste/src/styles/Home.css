@@ -21,9 +21,6 @@
     align-items: center;
 }
 
-.playlistContainer {
-    
-}
 
 .profile {
     height: 200px;
@@ -36,5 +33,7 @@ h1 {
 }
 
 ul {
-    color: white
+    color: white;
+    overflow-y: scroll;
+    height: 500px;
 }
