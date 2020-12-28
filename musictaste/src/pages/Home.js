@@ -3,8 +3,9 @@ import queryString from 'query-string';
 import axios from 'axios'
 import "../styles/Home.css";
 import Navbar from 'react-bootstrap/Navbar'
-import TrackPreview from './TrackPreview';
-import ArtistPreview from './ArtistPreview';
+import TrackPreview from '../components/TrackPreview';
+import ArtistPreview from '../components/ArtistPreview';
+import ScrollAnimation from 'react-animate-on-scroll'
 
 axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
 // axios.defaults.baseURL = "https://localhost:8888";
@@ -222,6 +223,8 @@ class Home extends Component {
                     </div>
                     
                 </div>
+                
+                
 
                 {/* Top Artists Note: Short Term */}
                 <div className="artistsContainer">
@@ -233,15 +236,12 @@ class Home extends Component {
                             ))}
                         </ul>
                     </div>
-                    
+
                     <div className="artistsTitle">
                         <h1>My Top Artists</h1>
                     </div>
                     
-                </div>
-
-
-                    
+                </div>                    
                 {/* <button onClick={this.getTopArtists}>Playlist</button> */}]
                 {/* Personal Info */}
                 <div className="info">
@@ -251,6 +251,8 @@ class Home extends Component {
                     <h1>{this.state.email}</h1>
                 </div>
 
+                {/* TODO: Make this only appear if you're on a friend's profile */}
+                <button>Compare with Friend</button>
             </div>
 
             

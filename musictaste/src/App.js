@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios'
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import Home from './components/Home';
-import Landing from './components/Landing';
+import Home from './pages/Home';
+import Landing from './pages/Landing';
+import Directory from './pages/Directory';
 var querystring = require('querystring');
 
 class App extends Component{
@@ -23,6 +24,7 @@ class App extends Component{
         <div className="App">
           <Route exact={true} path="/" component={Landing}/>
           <Route path="/home" component={Home} />
+          <Route path="/directory" component={Directory}/>
         </div>
       </BrowserRouter>
     );

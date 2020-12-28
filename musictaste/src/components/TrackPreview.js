@@ -31,7 +31,7 @@ class TrackPreview extends PureComponent {
     render() {
         return (
             <div className="track-container">
-                <img className="track-img" src={this.state.album_img} style={{width:'100px', height:'100px', borderRadius:"50px"}} />
+                <img className="track-img" src={this.state.album_img} style={{width:'80px', height:'80px', borderRadius:"40px"}} />
                 <h1>{this.state.name} - {this.state.artist}</h1>
             </div>
         )

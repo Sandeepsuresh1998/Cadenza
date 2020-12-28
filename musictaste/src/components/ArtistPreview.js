@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import "../styles/ArtistPreview.css"
 
-class ArtistPreview extends PureComponent {
+class ArtistPreview extends Component {
     constructor(props) {
         super(props)
 
@@ -22,7 +22,7 @@ class ArtistPreview extends PureComponent {
     render() {
         return (
             <div className="artist-container">
-                <img className="artist-img" src={this.state.img} style={{width:'100px', height:'100px', borderRadius:"50px"}}/>                
+                <img className="artist-img" src={this.state.img} style={{width:'80px', height:'80px', borderRadius:"40px"}}/>                
                 <h1>{this.state.name}</h1>
             </div>
         )
