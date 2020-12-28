@@ -179,14 +179,18 @@ app.get('/refresh_token', (req, res) =>  {
   });
 });
 
-
+// TODO: Error checking in firebase call
 // FUNCTION: Get all users in the database
 app.get('/getAllUsers', (req, res) => {
-  const citiesRef = db.collection('Users');
-  const snapshot = await citiesRef.get();
-  snapshot.forEach(doc => {
-    console.log(doc.id, '=>', doc.data());
-  });
+  var users = [];
+  db.collection("Users").get().then(snapshot => {
+    snapshot.forEach(doc => {
+      console.log(doc.data());
+      users.push(doc.data());
+    })
+    res.send(users).status(200);
+  })
+
 })
 
 
