@@ -1,15 +1,33 @@
 .root {
     background-color: #282828;
+    display: flex;
+    flex-direction: column;
 }
 
-.homeContainer {
+.tracksContainer {
     display: flex;
-    flex-direction: row;
+    flex: row;
+    justify-content: space-evenly;
     align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #282828;
+    padding: 5%;
 }
+
+.tracksTitle h1 {
+    font-size: 7vw;
+}
+
+.artistsContainer {
+    display: flex;
+    flex: row;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 5%;
+}
+
+.artistsTitle h1 {
+    font-size: 7vw;
+}
+
 .headerContainer {
     display: flex;
     flex-direction: column;
@@ -39,5 +57,5 @@ h1 {
 ul {
     color: white;
     overflow-y: scroll;
-    height: 500px;
+    height: 100vh;
 }

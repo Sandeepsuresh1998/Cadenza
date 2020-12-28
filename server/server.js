@@ -74,6 +74,7 @@ app.get('/login', (req, res) =>  {
     }));
 });
 
+//FUNCTION: Call back after login 
 app.get('/callback', (req, res) =>  {
 
   // your application requests refresh and access tokens
@@ -109,7 +110,6 @@ app.get('/callback', (req, res) =>  {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
-        // TODO: If user exists, update last time signed in. 
         // TODO: If user exists, run suite of information grabs.
 
         var options = {
@@ -129,8 +129,9 @@ app.get('/callback', (req, res) =>  {
             last_login: firestore.Timestamp.now()
           }
 
-          //Creating a user in the db
+          // Creating a user in the db
           // Doesn't seem to add duplicates
+          // Though i think this is just rewriting everything which is no bueno
           db.collection("Users").doc(body.id).set(userData);
           
         });
@@ -153,6 +154,7 @@ app.get('/callback', (req, res) =>  {
   }
 });
 
+// FUNCTION: Get refresh token 
 app.get('/refresh_token', (req, res) =>  {
 
   // requesting access token from refresh token
@@ -177,6 +179,8 @@ app.get('/refresh_token', (req, res) =>  {
   });
 });
 
+
+// FUNCTION: Get information about user
 app.get('/myInfo', (req, res) =>  {
   // Get a users' top artists
   const accessToken = req.query.accessToken;
@@ -196,6 +200,8 @@ app.get('/myInfo', (req, res) =>  {
 
 });
 
+// FUNCTION: get playlists for a user
+// access token to specify user is passed in
 app.get('/getPlaylists', (req, res) => { 
   const accessToken = req.query.accessToken;
   if(!accessToken) {
@@ -219,6 +225,8 @@ app.get('/getPlaylists', (req, res) => {
 
 });
 
+
+//FUNCTION: Get top currently playing song
 app.get('/getNowPlaying', (req, res) => {
   const accessToken = req.query.accessToken;
   if(!accessToken) {
@@ -239,7 +247,7 @@ app.get('/getNowPlaying', (req, res) => {
   });
 })
 
-// Get top artists
+// FUNCTION: Get top artists
 app.get('/getTopArtists', (req,res) => {
   const accessToken = req.query.accessToken;
   if(!accessToken) {
@@ -261,7 +269,7 @@ app.get('/getTopArtists', (req,res) => {
 
 });
 
-// Get top tracks
+// FUNCTION: Get top tracks
 app.get('/getTopTracks', (req,res) => {
   const accessToken = req.query.accessToken;
   if(!accessToken) {

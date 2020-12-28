@@ -202,10 +202,13 @@ class Home extends Component {
                     }
                 </div>
 
-                <div className="homeContainer">
-                    {/* Top Tracks Note: Currently Short Term */}
-                    <div className="tracksContainer">
+                {/* Top Tracks Note: Currently Short Term */}
+                <div className="tracksContainer">
+                    <div className="tracksTitle">
                         <h1>Current Bumps</h1>
+                    </div>
+                    
+                    <div className="tracksContent">
                         <ul>
                             {this.state.topTracks.map(listitem => (
                                 <TrackPreview 
@@ -217,20 +220,28 @@ class Home extends Component {
                             ))}
                         </ul>
                     </div>
+                    
+                </div>
 
-                    {/* Top Artists Note: Short Term */}
-                    <div className="artistsContainer">
-                        <h1>My Top Artists</h1>
+                {/* Top Artists Note: Short Term */}
+                <div className="artistsContainer">
+                    
+                    <div className="artistsContent">
                         <ul>
                             {this.state.topArtists.map(listitem => (
                                 <ArtistPreview key={listitem.id} name={listitem.name} img={listitem.images[0].url}/>
                             ))}
                         </ul>
                     </div>
+                    
+                    <div className="artistsTitle">
+                        <h1>My Top Artists</h1>
+                    </div>
+                    
+                </div>
 
 
                     
-                </div>
                 {/* <button onClick={this.getTopArtists}>Playlist</button> */}]
                 {/* Personal Info */}
                 <div className="info">
