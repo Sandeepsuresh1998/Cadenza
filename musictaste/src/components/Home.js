@@ -191,7 +191,7 @@ class Home extends Component {
                     </Navbar.Brand>
                 </Navbar> */}
                 <div className="headerContainer">
-                    <h1 style={{color: "#1DB954"}} className="header">Sounds</h1>
+                    {/* <h1 style={{color: "#1DB954"}} className="header">Sounds</h1> */}
                     {this.state.isPlaying ?
                         <TrackPreview 
                             name={this.state.currenlyPlaying.name} 
@@ -201,24 +201,9 @@ class Home extends Component {
                         null
                     }
                 </div>
+
                 <div className="homeContainer">
-
-                    {/* 
-                        This is a container that keeps profile information 
-                        not needed for design rn
-
-                        <div className="info">
-                            <h1>Your Info</h1>
-                            <img className="profile" src={this.state.image} />
-                            <h1>{this.state.name}</h1>
-                            <h1>{this.state.email}</h1>
-                        </div>
-                    */}
-                    
-
-                    <div className="playlistContainer">
-                    </div>
-
+                    {/* Top Tracks Note: Currently Short Term */}
                     <div className="tracksContainer">
                         <h1>Current Bumps</h1>
                         <ul>
@@ -233,6 +218,7 @@ class Home extends Component {
                         </ul>
                     </div>
 
+                    {/* Top Artists Note: Short Term */}
                     <div className="artistsContainer">
                         <h1>My Top Artists</h1>
                         <ul>
@@ -245,9 +231,18 @@ class Home extends Component {
 
                     
                 </div>
-                <button onClick={this.getTopArtists}>Playlist</button>
-                <p>{this.state.accessToken}</p>
+                {/* <button onClick={this.getTopArtists}>Playlist</button> */}]
+                {/* Personal Info */}
+                <div className="info">
+                    <h1>Your Info</h1>
+                    <img className="profile" src={this.state.image} />
+                    <h1>{this.state.name}</h1>
+                    <h1>{this.state.email}</h1>
+                </div>
+
             </div>
+
+            
         )
     }
 }

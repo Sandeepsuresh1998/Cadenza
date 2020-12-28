@@ -113,9 +113,6 @@ app.get('/callback', (req, res) =>  {
         // TODO: If user exists, update last time signed in. 
         // TODO: If user exists, run suite of information grabs.
 
-        
-
-
         var options = {
           url: 'https://api.spotify.com/v1/me',
           headers: { 'Authorization': 'Bearer ' + access_token },
@@ -126,7 +123,13 @@ app.get('/callback', (req, res) =>  {
         request.get(options, function(error, response, body) {
           console.log(body);
           
-          db.collection()
+          db.collection("Users").add({
+            name: "Slick Sandeep",
+            userId: "navajo"
+          }).then(function() {
+            console.log("I created user in database");
+          })
+          
         });
 
         // we can also pass the token to the browser to make requests from there

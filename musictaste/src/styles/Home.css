@@ -1,3 +1,7 @@
+.root {
+    background-color: #282828;
+}
+
 .homeContainer {
     display: flex;
     flex-direction: row;
