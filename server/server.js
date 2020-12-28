@@ -182,11 +182,10 @@ app.get('/refresh_token', (req, res) =>  {
 
 // FUNCTION: Get all users in the database
 app.get('/getAllUsers', (req, res) => {
-  const snapshot = db.collection('Users').get();
+  const citiesRef = db.collection('Users');
+  const snapshot = await citiesRef.get();
   snapshot.forEach(doc => {
-    console.log(doc.data)
-    data = doc.data;
-    res.send(data);
+    console.log(doc.id, '=>', doc.data());
   });
 })
 
