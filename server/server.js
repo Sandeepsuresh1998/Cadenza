@@ -13,6 +13,7 @@ const CircularJSON = require('circular-json');
 const { query } = require('express');
 var admin = require("firebase-admin");
 var serviceAccount = require("./musictaste-8ca96-firebase-adminsdk-tnkge-cf9e068aa9.json");
+const { firestore } = require('firebase-admin');
 
 // Initializing database access
 admin.initializeApp({
@@ -108,8 +109,6 @@ app.get('/callback', (req, res) =>  {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
-
-        // TODO: Add user to db if not already there
         // TODO: If user exists, update last time signed in. 
         // TODO: If user exists, run suite of information grabs.
 
@@ -126,10 +125,12 @@ app.get('/callback', (req, res) =>  {
           const userData = {
             name: body.display_name,
             email: body.email,
-            userId: body.id
+            userId: body.id,
+            last_login: firestore.Timestamp.now()
           }
 
           //Creating a user in the db
+          // Doesn't seem to add duplicates
           db.collection("Users").doc(body.id).set(userData);
           
         });
