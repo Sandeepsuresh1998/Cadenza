@@ -180,6 +180,13 @@ app.get('/refresh_token', (req, res) =>  {
 });
 
 
+// FUNCTION: Get all users in the database
+app.get('/getAllUsers', (req, res) => {
+  const snapshot = db.collection('Users').get();
+  res.send(snapshot);
+})
+
+
 // FUNCTION: Get information about user
 app.get('/myInfo', (req, res) =>  {
   // Get a users' top artists
