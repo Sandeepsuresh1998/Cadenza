@@ -124,8 +124,8 @@ app.get('/callback', (req, res) =>  {
           console.log(body);
           
           db.collection("Users").add({
-            name: "Slick Sandeep",
-            userId: "navajo"
+            name: body.displau_name,
+            userId: body.id
           }).then(function() {
             console.log("I created user in database");
           })
