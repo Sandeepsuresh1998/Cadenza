@@ -123,12 +123,14 @@ app.get('/callback', (req, res) =>  {
         request.get(options, function(error, response, body) {
           console.log(body);
           
-          db.collection("Users").add({
+          const userData = {
             name: body.display_name,
+            email: body.email,
             userId: body.id
-          }).then(function() {
-            console.log("I created user in database");
-          })
+          }
+
+          //Creating a user in the db
+          db.collection("Users").doc(body.id).set(userData);
           
         });
 
