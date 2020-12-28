@@ -126,6 +126,7 @@ app.get('/callback', (req, res) =>  {
             name: body.display_name,
             email: body.email,
             userId: body.id,
+            access_token: access_token,
             last_login: firestore.Timestamp.now()
           }
 
