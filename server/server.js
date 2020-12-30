@@ -331,7 +331,12 @@ app.get('/getSharedTopTracks', (req, res) => {
   //Return top tracks in short, medium, long term
   //NOTE: This might be expensive at scale because im not saving anything
 
-  console.log(req.body);
+  console.log(req.query);
+
+  //For now by "my" I mean the logged in user
+  const myUserId = req.query.me;
+  const otherUserId = req.query.other;
+
 });
 
 
