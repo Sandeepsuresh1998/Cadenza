@@ -194,7 +194,7 @@ app.get('/getAllUsers', (req, res) => {
     res.send(users).status(200);
   })
 
-})
+});
 
 
 // FUNCTION: Get information about user
@@ -323,6 +323,16 @@ app.get('/getTopTracks', (req,res) => {
 
 });
 
+
+//FUNCTION: Return matches in two users' top tracks
+app.get('/getSharedTopTracks', (req, res) => {
+
+  //In the parameters we have two user ids
+  //Return top tracks in short, medium, long term
+  //NOTE: This might be expensive at scale because im not saving anything
+
+  console.log(req.body);
+});
 
 
 app.listen(process.env.PORT || 8888);
