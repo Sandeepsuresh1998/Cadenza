@@ -1,5 +1,6 @@
 import axios from 'axios'
 import React, { Component } from 'react'
+import "../styles/ProfilePreview.css"
 
 class ProfilePreview extends Component {
     constructor(props) {
@@ -7,25 +8,27 @@ class ProfilePreview extends Component {
 
         this.state = {
             name: "",
-            img: ""
+            img: "",
+            userId: "",
         }
     }
 
     componentDidMount() {
         this.setState({
             name: this.props.name,
-            img: this.props.img
+            img: this.props.img,
+            userId: this.props.userId
         })
 
     }
 
     render() {
         return (
-            <div className="profileContainer">
-                <h1>{this.state.name}</h1>
-                <img
+            <div className="profileContainer" id={this.state.userId}>
+                 <img
                     src={this.state.img}
                 />
+                <h1>{this.state.name}</h1>
             </div>
         )
     }

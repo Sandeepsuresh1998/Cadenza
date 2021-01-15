@@ -1,0 +1,16 @@
+.profileContainer {
+    display: flex;
+    flex-direction: row;
+    z-index: 1;
+}
+
+.profileContainer img {
+    width: 80px;
+    height: 80px;
+    border-radius: 40px;
+    pointer-events: none;
+}
+
+.profileContainer h1 {
+    pointer-events: none;
+}

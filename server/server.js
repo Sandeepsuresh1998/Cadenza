@@ -336,6 +336,51 @@ app.get('/getSharedTopTracks', (req, res) => {
   //For now by "my" I mean the logged in user
   const myUserId = req.query.me;
   const otherUserId = req.query.other;
+  var myRefreshToken;
+  var otherRefreshToken;
+
+  //Hit Db for acess_tokens from each
+  //Get user's access and refresh
+  const myObj = db.collection("Users").doc(myUserId).get().then(doc => {
+    
+    if(!doc.exists) {
+      res.send("Unable to find logged in user").status(500);
+    }
+
+    myRefreshToken = doc.data().refresh_token;
+
+    console.log(doc.data().access_token);
+  })
+
+  //Get other's access and refresh
+  const otherObj = db.collection("Users").doc(otherUserId).get().then(doc => {
+
+    if(!doc.exists) {
+      res.send("Unable to find logged in user").status(500);
+    }
+
+    otherRefreshToken = doc.data().refresh_token;
+    console.log(doc.data().access_token);
+  });
+
+  //Now get their top tracks (short, med, long)
+  //Assume access token has expired and request new one 
+  let config = {
+    headers: {
+      'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+    }
+  }
+  let myParams = {
+    grant_type: "refresh_token",
+    refresh_token: myRefreshToken
+  }
+
+  axios.post("https://accounts.spotify.com/api/token", myParams, config).then(res => {
+    return res.send(res.data());
+  })
+
+
+  axios.get('/getTopTracks', )
 
 });
 
