@@ -351,6 +351,17 @@ app.get('/getSharedTopTracks', (req, res) => {
       res.send("Unable to find logged in user").status(500);
     }
     myRefreshToken = doc.data().refresh_token;
+    //Assume access token has expired and request new one 
+    axios.get('/refresh_token', {
+      params: {
+        refresh_token: myRefreshToken
+      }
+    }).then(res => {
+      console.log(res.data)
+    }).catch(err => {
+      console.log(err);
+      res.send(err).status(501); 
+    })
     console.log(doc.data().access_token);
   }).catch(err => {
     console.log(err);
@@ -369,18 +380,7 @@ app.get('/getSharedTopTracks', (req, res) => {
     res.send(err).status(501);
   });
 
-  //Now get their top tracks (short, med, long)
-  //Assume access token has expired and request new one 
-  axios.get('/refresh_token', {
-    params: {
-      refresh_token: myRefreshToken
-    }
-  }).then(res => {
-    console.log(res.data)
-  }).catch(err => {
-    console.log(err);
-    res.send(err).status(501); 
-  })
+  
 
 });
 
