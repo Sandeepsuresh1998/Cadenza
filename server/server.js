@@ -99,7 +99,7 @@ app.get('/callback', (req, res) =>  {
         grant_type: 'authorization_code'
       },
       headers: {
-        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+        'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
       },
       json: true
     };
@@ -164,7 +164,7 @@ app.get('/refresh_token', (req, res) =>  {
   var refresh_token = req.query.refresh_token;
   var authOptions = {
     url: 'https://accounts.spotify.com/api/token',
-    headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+    headers: { 'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64') },
     form: {
       grant_type: 'refresh_token',
       refresh_token: refresh_token
@@ -172,12 +172,17 @@ app.get('/refresh_token', (req, res) =>  {
     json: true
   };
 
+  //Debug
+  console.log(client_id);
+
   request.post(authOptions, function(error, response, body) {
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token;
       res.send({
-        'access_token': access_token
+        'access_token': access_token,
       });
+    } else {
+      res.send(response);
     }
   });
 });
@@ -342,45 +347,40 @@ app.get('/getSharedTopTracks', (req, res) => {
   //Hit Db for acess_tokens from each
   //Get user's access and refresh
   const myObj = db.collection("Users").doc(myUserId).get().then(doc => {
-    
     if(!doc.exists) {
       res.send("Unable to find logged in user").status(500);
     }
-
     myRefreshToken = doc.data().refresh_token;
-
     console.log(doc.data().access_token);
-  })
+  }).catch(err => {
+    console.log(err);
+    res.send(err).status(501);
+  }) 
 
   //Get other's access and refresh
   const otherObj = db.collection("Users").doc(otherUserId).get().then(doc => {
-
     if(!doc.exists) {
       res.send("Unable to find logged in user").status(500);
     }
-
     otherRefreshToken = doc.data().refresh_token;
     console.log(doc.data().access_token);
+  }).catch(err => {
+    console.log(err);
+    res.send(err).status(501);
   });
 
   //Now get their top tracks (short, med, long)
   //Assume access token has expired and request new one 
-  let config = {
-    headers: {
-      'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+  axios.get('/refresh_token', {
+    params: {
+      refresh_token: myRefreshToken
     }
-  }
-  let myParams = {
-    grant_type: "refresh_token",
-    refresh_token: myRefreshToken
-  }
-
-  axios.post("https://accounts.spotify.com/api/token", myParams, config).then(res => {
-    return res.send(res.data());
+  }).then(res => {
+    console.log(res.data)
+  }).catch(err => {
+    console.log(err);
+    res.send(err).status(501); 
   })
-
-
-  axios.get('/getTopTracks', )
 
 });
 
