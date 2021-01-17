@@ -203,7 +203,7 @@ app.get('/getAllUsers', (req, res) => {
 });
 
 app.post('/getNewAccessToken', (req, res) => {
-  const refreshToken = req.query.accessToken;
+  const refreshToken = req.query.refreshToken;
 
   const params = {
     grant_type: "refresh_token", 
@@ -215,7 +215,8 @@ app.post('/getNewAccessToken', (req, res) => {
       'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
     }
   }).then(response => {
-    console.log("New access token: " + response.data.access_token);
+    console.log("New access token: " + response.data);
+    res.send(response.data);
   })
 })
 
@@ -369,6 +370,11 @@ app.get('/getSharedTopTracks', (req, res) => {
       res.send("Unable to find logged in user").status(500);
     }
     myRefreshToken = doc.data().refresh_token;
+    axios.post("/getNewAccessToken", {
+      refreshToken: myRefreshToken
+    }).then(response => {
+      console.log("We are back from the post with the new access token");
+    })
   }).catch(err => {
     res.send(err).status(501);
   }) 
