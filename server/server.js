@@ -158,6 +158,7 @@ app.get('/callback', (req, res) =>  {
 });
 
 // FUNCTION: Get refresh token 
+// Note: not sure if this works
 app.get('/refresh_token', (req, res) =>  {
 
   // requesting access token from refresh token
@@ -200,6 +201,23 @@ app.get('/getAllUsers', (req, res) => {
   })
 
 });
+
+app.post('/getNewAccessToken', (req, res) => {
+  const refreshToken = req.query.accessToken;
+
+  const params = {
+    grant_type: "refresh_token", 
+    refresh_token: refreshToken
+  }
+
+  axios.post('https://accounts.spotify.com/api/token', params, {
+    headers: {
+      'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
+    }
+  }).then(response => {
+    console.log("New access token: " + response.data.access_token);
+  })
+})
 
 
 // FUNCTION: Get information about user
@@ -351,20 +369,7 @@ app.get('/getSharedTopTracks', (req, res) => {
       res.send("Unable to find logged in user").status(500);
     }
     myRefreshToken = doc.data().refresh_token;
-    //Assume access token has expired and request new one 
-    axios.get('/refresh_token', {
-      params: {
-        refresh_token: myRefreshToken
-      }
-    }).then(res => {
-      console.log(res.data)
-    }).catch(err => {
-      console.log(err);
-      res.send(err).status(501); 
-    })
-    console.log(doc.data().access_token);
   }).catch(err => {
-    console.log(err);
     res.send(err).status(501);
   }) 
 
@@ -374,9 +379,7 @@ app.get('/getSharedTopTracks', (req, res) => {
       res.send("Unable to find logged in user").status(500);
     }
     otherRefreshToken = doc.data().refresh_token;
-    console.log(doc.data().access_token);
   }).catch(err => {
-    console.log(err);
     res.send(err).status(501);
   });
 
