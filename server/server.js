@@ -37,6 +37,7 @@ var spotifyApi = new SpotifyWebApi({
  * @return {string} The generated string
  */
 var generateRandomString = function(length) {
+  console.log(length);
   var text = '';
   var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
