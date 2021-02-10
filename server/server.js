@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require('express'); // Express web server framework
 var request = require('request'); // "Request" library
 var cors = require('cors');
@@ -10,10 +11,12 @@ var redirect_uri =  process.env.REDIRECT_URI || 'http://localhost:8888/callback'
 var SpotifyWebApi = require('spotify-web-api-node');
 var axios = require('axios');
 const CircularJSON = require('circular-json');
-const { query } = require('express');
+const { query, response } = require('express');
 var admin = require("firebase-admin");
 var serviceAccount = require("./musictaste-8ca96-firebase-adminsdk-tnkge-cf9e068aa9.json");
 const { firestore } = require('firebase-admin');
+const helper = require("./helpers.js");
+
 
 // Initializing database access
 admin.initializeApp({
@@ -202,23 +205,23 @@ app.get('/getAllUsers', (req, res) => {
 
 });
 
-app.post('/getNewAccessToken', (req, res) => {
-  const refreshToken = req.query.refreshToken;
+// app.post('/getNewAccessToken', (req, res) => {
+//   const refreshToken = req.query.refreshToken;
 
-  const params = {
-    grant_type: "refresh_token", 
-    refresh_token: refreshToken
-  }
+//   const params = {
+//     grant_type: "refresh_token", 
+//     refresh_token: refreshToken
+//   }
 
-  axios.post('https://accounts.spotify.com/api/token', params, {
-    headers: {
-      'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
-    }
-  }).then(response => {
-    console.log("New access token: " + response.data);
-    res.send(response.data);
-  })
-})
+//   axios.post('https://accounts.spotify.com/api/token', params, {
+//     headers: {
+//       'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
+//     }
+//   }).then(response => {
+//     console.log("New access token: " + response.data);
+//     res.send(response.data);
+//   })
+// })
 
 
 // FUNCTION: Get information about user
@@ -237,6 +240,8 @@ app.get('/myInfo', (req, res) =>  {
     console.log(data);
     // TODO: Error checking
     res.send(data).status(200);
+  }).catch(err => {
+    console.log(err);
   })
 
 });
@@ -349,36 +354,34 @@ app.get('/getTopTracks', (req,res) => {
 
 
 //FUNCTION: Return matches in two users' top tracks
-app.get('/getSharedTopTracks', (req, res) => {
+app.get('/getSharedTopTracks', (req, res, next) => {
 
   //In the parameters we have two user ids
   //Return top tracks in short, medium, long term
   //NOTE: This might be expensive at scale because im not saving anything
 
-  console.log(req.query);
-
   //For now by "my" I mean the logged in user
   const myUserId = req.query.me;
   const otherUserId = req.query.other;
-  var myRefreshToken;
-  var otherRefreshToken;
+  var otherAccessToken;
+  var myAccessToken;
 
   //Hit Db for acess_tokens from each
   //Get user's access and refresh
   const myObj = db.collection("Users").doc(myUserId).get().then(doc => {
+    console.log("Starting the get shared top reqs");
     if(!doc.exists) {
       res.send("Unable to find logged in user").status(500);
     }
-    myRefreshToken = doc.data().refresh_token;
-    axios.post("/getNewAccessToken", {
-      refreshToken: myRefreshToken
-    }).then(response => {
-      console.log("We are back from the post with the new access token");
+    var myRefreshToken = doc.data().refresh_token;
+    helper.getNewAccessToken(myRefreshToken).then(token => {
+      console.log("New access token: " + token);
     })
   }).catch(err => {
     res.send(err).status(501);
   }) 
 
+  console.log("New access token: " + myAccessToken)
   //Get other's access and refresh
   const otherObj = db.collection("Users").doc(otherUserId).get().then(doc => {
     if(!doc.exists) {
@@ -393,5 +396,5 @@ app.get('/getSharedTopTracks', (req, res) => {
 
 });
 
-
+console.log("Listening on 8888")
 app.listen(process.env.PORT || 8888);
