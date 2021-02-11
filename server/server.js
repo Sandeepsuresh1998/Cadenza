@@ -368,31 +368,40 @@ app.get('/getSharedTopTracks', (req, res, next) => {
 
   //Hit Db for acess_tokens from each
   //Get user's access and refresh
-  const myObj = db.collection("Users").doc(myUserId).get().then(doc => {
+  db.collection("Users").doc(myUserId).get().then(doc => {
+
     console.log("Starting the get shared top reqs");
     if(!doc.exists) {
       res.send("Unable to find logged in user").status(500);
     }
-    var myRefreshToken = doc.data().refresh_token;
-    helper.getNewAccessToken(myRefreshToken).then(token => {
-      console.log("New access token: " + token);
+    helper.getNewAccessToken(doc.data().refresh_token).then(token => {
+      myAccessToken = token;
     })
+
+    //Get other's new access token
+    db.collection("Users").doc(otherUserId).get().then(doc => {
+      if(!doc.exists) {
+        res.send("Unable to find logged in user").status(500);
+      }
+      helper.getNewAccessToken(doc.data().refresh_token).then(token => {
+        otherAccessToken = token;
+        //Call helper to get all the same shared top tracks
+        helper.getSharedTracks(myAccessToken, otherAccessToken);
+      })
+    }).catch(err => {
+      //Couldn't find other in the db
+      res.send(err).status(501);
+    });
+    
   }).catch(err => {
+    // Couldn't find me in the db
     res.send(err).status(501);
   }) 
 
-  console.log("New access token: " + myAccessToken)
-  //Get other's access and refresh
-  const otherObj = db.collection("Users").doc(otherUserId).get().then(doc => {
-    if(!doc.exists) {
-      res.send("Unable to find logged in user").status(500);
-    }
-    otherRefreshToken = doc.data().refresh_token;
-  }).catch(err => {
-    res.send(err).status(501);
-  });
+  
 
   
+  console.log("End");
 
 });
 

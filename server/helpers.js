@@ -1,39 +1,17 @@
 var axios = require('axios');
+const { response } = require('express');
 var querystring = require('querystring');
 var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var request = require('request'); // "Request" library
 
+function findMatchingTracks(myTrackList, otherTrackList) {
+    return myTrackList
+}
 
 async function getNewAccessToken(refreshToken) {
-    console.log(client_secret)
-    // requesting access token from refresh token
-    // var authOptions = {
-    //     url: 'https://accounts.spotify.com/api/token',
-    //     headers: { 'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64') },
-    //     form: {
-    //         grant_type: 'refresh_token',
-    //         refresh_token: refreshToken
-    //     },
-    //     json: true
-    // } 
-    // console.log("Making new access token")
 
-    // return new Promise()
-    // request.post(authOptions, function(error, response, body) {
-    //     if (!error && response.statusCode === 200) {
-    //         var access_token = body.access_token;
-    //         console.log(access_token);
-    //         return access_token;
-    //     } else {
-    //         console.log("Internal error")
-    //         return -1;
-    //     }
-    // });
-
-
-    console.log(typeof(refreshToken));
-    const resp = await axios.post('https://accounts.spotify.com/api/token', querystring.stringify({
+    const token = await axios.post('https://accounts.spotify.com/api/token', querystring.stringify({
         grant_type: 'refresh_token', 
         refresh_token: refreshToken
     }), {
@@ -48,8 +26,40 @@ async function getNewAccessToken(refreshToken) {
     }).catch(err => {
         console.log(err.message);
     });
-
-    return resp;
+    return token;
 }
 
-module.exports = {getNewAccessToken}
+function getTracksHelper(timeRange, accessToken) {
+    //Create header
+    const config = {
+        headers: {Authorization : `Bearer ${accessToken}`},
+    }
+    
+    return axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + timeRange, config).then(response => {
+        
+    })
+}
+
+async function getSharedTracks(myAccessToken, otherAccessToken) {
+    //All the requests for all the different ranges we get access to
+
+    console.log("Sending this access: " + myAccessToken);
+    console.log("Sending this otherAccessToken: " + otherAccessToken);
+
+    const similarTracks = await axios.all([
+        getTracksHelper('short_term', myAccessToken),
+        getTracksHelper('medium_term', myAccessToken),
+        getTracksHelper('long_term', myAccessToken),
+        getTracksHelper('short_term', otherAccessToken),
+        getTracksHelper('medium_term', otherAccessToken),
+        getTracksHelper('long_term', otherAccessToken)
+    ]).then(axios.spread((...responses) => {
+        console.log(responses[0])
+    })).catch(error => {
+        console.log(error);
+    });
+    return similarTracks;
+}
+
+
+module.exports = {getNewAccessToken, getSharedTracks}
