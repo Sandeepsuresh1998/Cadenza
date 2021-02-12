@@ -5,8 +5,30 @@ var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
 var client_secret = process.env.SPOTIFY_CLIENT_SECRET; // Your secret
 var request = require('request'); // "Request" library
 
-function findMatchingTracks(myTrackList, otherTrackList) {
-    return myTrackList
+function findMatchingTracks(myTracks, otherTracks) {
+    
+    //Should be same size
+    if(myTracks.length != otherTracks.length) {
+        console.log("Mismatch")
+    }
+
+    //TODO: Review algorithms to see if there is faster way to do this
+    // O(n^2)
+    intersection = []
+    for (i in myTracks) {
+        for (k in otherTracks) {
+            if(myTracks[i].id == otherTracks[k].id) {
+                intersection.push(myTracks[i]);
+            }
+        }
+    }
+
+    //Intersectoin of top songs
+    for (i in intersection) {
+        console.log(intersection[i].name)
+    }
+    
+    return intersection;
 }
 
 async function getNewAccessToken(refreshToken) {
@@ -29,15 +51,17 @@ async function getNewAccessToken(refreshToken) {
     return token;
 }
 
+function compareTwoSongs(track1, track2) {
+    return track1.id == track2.id;
+}
+
 function getTracksHelper(timeRange, accessToken) {
     //Create header
     const config = {
         headers: {Authorization : `Bearer ${accessToken}`},
     }
     
-    return axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + timeRange, config).then(response => {
-        
-    })
+    return axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + timeRange,config).then(response => response.data.items)
 }
 
 async function getSharedTracks(myAccessToken, otherAccessToken) {
@@ -54,7 +78,9 @@ async function getSharedTracks(myAccessToken, otherAccessToken) {
         getTracksHelper('medium_term', otherAccessToken),
         getTracksHelper('long_term', otherAccessToken)
     ]).then(axios.spread((...responses) => {
-        console.log(responses[0])
+        myTracks = [...responses[0], ...responses[1],...responses[2]]
+        otherTracks = [...responses[3], ...responses[4],...responses[5]]
+        return findMatchingTracks(myTracks, otherTracks)
     })).catch(error => {
         console.log(error);
     });

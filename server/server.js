@@ -341,7 +341,6 @@ app.get('/getTopTracks', (req,res) => {
     }
   }
 
-
   axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + queryTimeRange, config).then((response) => {
     console.log("Got top artists");
     return res.send(response.data).status(200);
