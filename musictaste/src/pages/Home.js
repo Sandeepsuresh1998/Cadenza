@@ -6,9 +6,10 @@ import Navbar from 'react-bootstrap/Navbar'
 import TrackPreview from '../components/TrackPreview';
 import ArtistPreview from '../components/ArtistPreview';
 import ScrollAnimation from 'react-animate-on-scroll'
+import { useHistory } from "react-router-dom";
 
-axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
-// axios.defaults.baseURL = "https://localhost:8888";
+//axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
+axios.defaults.baseURL = "http://localhost:8888";
 
 
 
@@ -252,7 +253,6 @@ class Home extends Component {
                 </div>
 
                 {/* TODO: Make this only appear if you're on a friend's profile */}
-                <button>Compare with Friend</button>
             </div>
 
             
