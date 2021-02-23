@@ -250,6 +250,7 @@ class Home extends Component {
                     <img className="profile" src={this.state.image} />
                     <h1>{this.state.name}</h1>
                     <h1>{this.state.email}</h1>
+                    <p>{this.state.accessToken}</p>
                 </div>
 
                 {/* TODO: Make this only appear if you're on a friend's profile */}
