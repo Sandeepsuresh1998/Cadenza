@@ -7,6 +7,9 @@ var request = require('request'); // "Request" library
 
 function findMatchingItems(myItems, otherItems) {
 
+    console.log(myItems.length);
+    console.log(otherItems.length);
+
     //TODO: Review algorithms to see if there is faster way to do this
     // O(n^2)
     idIntersection = new Set();
@@ -54,7 +57,7 @@ function getArtistsHelper(timeRange, accessToken) {
         headers: {Authorization : `Bearer ${accessToken}`},
     }
 
-    return axios.get("https://api.spotify.com/v1/me/top/artists?time_range=" + timeRange, config).then(response => response.data.items)
+    return axios.get("https://api.spotify.com/v1/me/top/artists?time_range=" + timeRange + "&limit=50", config).then(response => response.data.items)
 }
 
 function getTracksHelper(timeRange, accessToken) {
@@ -63,7 +66,7 @@ function getTracksHelper(timeRange, accessToken) {
         headers: {Authorization : `Bearer ${accessToken}`},
     }
     
-    return axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + timeRange,config).then(response => response.data.items)
+    return axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + timeRange + "&limit=50",config).then(response => response.data.items)
 }
 
 async function getSharedTracks(myAccessToken, otherAccessToken) {

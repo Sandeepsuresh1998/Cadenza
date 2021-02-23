@@ -28,7 +28,7 @@ class Directory extends Component {
     handleProfileClick = (userId) => {
         //TODO: Make get call to share similar tracks
         //TODO: Pass parameters of my user id and cheta's
-        axios.get('/getSharedTopArtists', {
+        axios.get('/getSharedTopTracks', {
             params: {
                 me: "1223546560",
                 other: userId,   
