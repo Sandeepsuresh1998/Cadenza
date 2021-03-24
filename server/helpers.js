@@ -69,6 +69,31 @@ function getTracksHelper(timeRange, accessToken) {
     return axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + timeRange + "&limit=50",config).then(response => response.data.items)
 }
 
+
+
+function getAllPlaylistTracks(accessToken) {
+    //Create header
+    const config = {
+        headers: {Authorization : `Bearer ${accessToken}`},
+    }
+
+    //First get all the playlist ids, max limit 50
+    axios.get("https://api.spotify.com/v1/me/playlists?limit=50", config).then(response => {
+        //Extract ids from response
+        const playlistIds = response.data.items.map(item => item.id) 
+
+        //For each id get as many tracks as you can
+        const playlistPromises = playlistIds.map(id => {
+            return axios.get(`https://api.spotify.com/v1/playlists/${id}/tracks?limit=100`, config).then(res => res.data.items);
+        })
+        return Promise.all(playlistPromises).then(res => {
+            //Push all playlist track objs into an array
+            const allTracks = [].concat(...res)
+            
+        })
+    })
+}
+
 async function getSharedTracks(myAccessToken, otherAccessToken) {
     //All the requests for all the different ranges we get access to
 
@@ -78,9 +103,10 @@ async function getSharedTracks(myAccessToken, otherAccessToken) {
         getTracksHelper('long_term', myAccessToken),
         getTracksHelper('short_term', otherAccessToken),
         getTracksHelper('medium_term', otherAccessToken),
-        getTracksHelper('long_term', otherAccessToken)
+        getTracksHelper('long_term', otherAccessToken),
+        getAllPlaylistTracks(myAccessToken),
+        getAllPlaylistTracks(otherAccessToken)
     ]).then(axios.spread((...responses) => {
-        console.log()
         myTracks = [...responses[0], ...responses[1],...responses[2]]
         otherTracks = [...responses[3], ...responses[4],...responses[5]]
         return findMatchingItems(myTracks, otherTracks)

@@ -4,6 +4,7 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import Landing from './pages/Landing';
 import Directory from './pages/Directory';
+import Shared from './pages/Shared';
 var querystring = require('querystring');
 
 class App extends Component{
@@ -25,6 +26,7 @@ class App extends Component{
           <Route exact={true} path="/" component={Landing}/>
           <Route path="/home" component={Home} />
           <Route path="/directory" component={Directory}/>
+          <Route path="/shared" component={Shared} />
         </div>
       </BrowserRouter>
     );

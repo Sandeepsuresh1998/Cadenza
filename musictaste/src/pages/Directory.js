@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import ProfilePreview from '../components/ProfilePreview'
+import {Link} from 'react-router-dom';
 
 class Directory extends Component {
     constructor(props) {
@@ -33,6 +34,15 @@ class Directory extends Component {
                 me: "1223546560",
                 other: userId,   
             }
+        }).then((res) => {
+            const pair = {
+                me: "12233546560",
+                other: userId
+            }
+            this.props.history.push({
+                pathname: "/Shared",
+                data: pair
+            })
         })
     }
 
@@ -42,9 +52,11 @@ class Directory extends Component {
                 <div className="listContainer">
                     <ul>
                             {this.state.users.map(user => (
-                                <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
-                                    <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
-                                </button>
+                                <Link to="/Shared">
+                                    <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
+                                        <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
+                                    </button>
+                                </Link>
                             ))}    
                     </ul>
                     
