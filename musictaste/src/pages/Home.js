@@ -8,8 +8,8 @@ import ArtistPreview from '../components/ArtistPreview';
 import ScrollAnimation from 'react-animate-on-scroll'
 import { useHistory } from "react-router-dom";
 
-axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
-//axios.defaults.baseURL = "http://localhost:8888";
+//axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
+axios.defaults.baseURL = "http://localhost:8888";
 
 
 

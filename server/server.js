@@ -444,6 +444,38 @@ app.get('/getSharedTopArtists', (req, res, next) => {
   }) 
 });
 
+app.get('/getComparisonData', (req, res) => {
+  const friendshipToken = req.query.friendshipToken;
+  console.log(friendshipToken);
+  db.collection('Comparisons').doc(friendshipToken).get().then((doc) => {
+    console.log(doc)
+    // If the joint user page doesn't exist
+    if(!doc.exists) {
+      return res.send("Unable to find friendship in the db").status(500);
+    }
+    const data = doc.data();
+
+    //Grab track data
+    trimmedTrackArray = data.similarTracks.map(track => {
+      return trackObj = {
+        name: track.name, 
+        id: track.id,
+        url: track.external_urls.spotify,
+        artist: track.artists.map(artist => {
+          return artistObj = {
+            name: artist.name, 
+            link: artist.external_urls.spotify
+          }
+        }),
+        img: track.album.images[0].url
+      }
+    })
+
+    console.log(trimmedTrackArray);
+    return res.send(trimmedTrackArray).status(200);
+  })
+})
+
 
 console.log("Listening on 8888")
 app.listen(process.env.PORT || 8888);

@@ -10,15 +10,27 @@ class Shared extends Component {
             myImg: "", 
             friendImg: "",
         }
+        this.grabSimilarData = this.grabSimilarData.bind(this);
     }
 
     componentDidMount() {
         let parsed = queryString.parse(window.location.search);
+        console.log(parsed.friendshipToken);
         this.setState({
             friendshipToken: parsed.friendshipToken
         }, () => {
             //Grab the tracks from db
+            this.grabSimilarData()
         });
+    }
+
+    grabSimilarData() {
+        axios.get('/getComparisonData', {params: {
+            'friendshipToken': this.state.friendshipToken
+        }}).then(res => {
+            console.log("Response from backend")
+            console.log(res.data);
+        })
     }
 
     render() {
