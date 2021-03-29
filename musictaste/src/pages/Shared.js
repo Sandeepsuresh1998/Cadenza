@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import queryString from 'query-string';
 import axios from 'axios'
+import TrackPreview from '../components/TrackPreview';
 
 class Shared extends Component {
     constructor(props) {
@@ -9,7 +10,8 @@ class Shared extends Component {
         this.state = {
             firstUser: {},
             secondUser: {},
-            friendshipToken: ""
+            friendshipToken: "",
+            sharedTracks: []
         }
         this.grabSimilarData = this.grabSimilarData.bind(this);
         this.grabUserData = this.grabUserData.bind(this);
@@ -34,6 +36,11 @@ class Shared extends Component {
             console.log(`First ${res.data.firstId}, Second: ${res.data.secondId}`)
             this.grabUserData(res.data.firstId, 1);
             this.grabUserData(res.data.secondId, 2);
+
+            //Set shared tracks
+            this.setState({
+                sharedTracks: res.data.tracks
+            })
         })
     }
 
@@ -47,7 +54,6 @@ class Shared extends Component {
             this.setState({
                 [userLoc] : res.data
             })
-            console.log(this.state);
         })
     }
 
@@ -57,6 +63,16 @@ class Shared extends Component {
                 <div className="profiles">
                     <img src={this.state.firstUser.img}></img>
                     <img src={this.state.secondUser.img}></img>
+                </div>
+                <div className="tracks">
+                    {this.state.sharedTracks.map(track => (
+                        <TrackPreview
+                            key={track.id}
+                            name={track.name}
+                            artists={track.artist}
+                            album_img={track.img}
+                        />
+                    ))}
                 </div>
             </div>
         )
