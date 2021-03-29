@@ -334,7 +334,7 @@ app.get('/getTopTracks', (req,res) => {
 
 
 //FUNCTION: Return matches in two users' top tracks
-app.get('/getSharedTopTracks', (req, res, next) => {
+app.get('/getSharedTopTracks', (req, res) => {
 
   //In the parameters we have two user ids
   //Return top tracks in short, medium, long term
@@ -371,7 +371,15 @@ app.get('/getSharedTopTracks', (req, res, next) => {
           //TODO: Check if the response is empty, don't waste the write
           //TODO: Write to collection that holds all songs and artists
           //TODO: Redirect to shared page
-          res.redirect('/Shared')
+          //Make db entry for ids 
+          const jointId = myUserId < otherUserId ? myUserId+otherUserId : otherUserId+myUserId
+          db.collection("Comparisons").doc(jointId).set({
+            trackGenerationTime: firestore.Timestamp.now(),
+            similarTracks: response
+          })
+          res.redirect('http://localhost:3000/shared?'+ querystring.stringify({
+              friendshipToken: jointId 
+          }))
         })
       })
     }).catch(err => {

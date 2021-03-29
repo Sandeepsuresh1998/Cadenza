@@ -70,15 +70,21 @@ function getTracksHelper(timeRange, accessToken) {
 }
 
 
-
-function getAllPlaylistTracks(accessToken) {
+/*  TODO: 
+    This needs to be buried for now because I can't figure out how to unwrap
+    all the promises returned to me from the playlists into the og req. That 
+    being said, this will be important in the future to get better results 
+    from shared tracks, as it increases the volume of songs we look at 
+    exponentially (~150 -> 1000+) in my small test cases.
+*/
+async function getAllPlaylistTracks(accessToken) {
     //Create header
     const config = {
         headers: {Authorization : `Bearer ${accessToken}`},
     }
 
     //First get all the playlist ids, max limit 50
-    axios.get("https://api.spotify.com/v1/me/playlists?limit=50", config).then(response => {
+    return axios.get("https://api.spotify.com/v1/me/playlists?limit=50", config).then(response => {
         //Extract ids from response
         const playlistIds = response.data.items.map(item => item.id) 
 
@@ -86,11 +92,15 @@ function getAllPlaylistTracks(accessToken) {
         const playlistPromises = playlistIds.map(id => {
             return axios.get(`https://api.spotify.com/v1/playlists/${id}/tracks?limit=100`, config).then(res => res.data.items);
         })
-        return Promise.all(playlistPromises).then(res => {
-            //Push all playlist track objs into an array
-            const allTracks = [].concat(...res)
-            
-        })
+
+        return playlistPromises;
+
+        // return axios.all(playlistPromises).then(res => {
+        //     //Push all playlist track objs into an array
+        //     allTracks = [].concat(...res)
+        //     console.log("All tracks in my function call");
+        //     return allTracks;
+        // })
     })
 }
 
@@ -104,15 +114,15 @@ async function getSharedTracks(myAccessToken, otherAccessToken) {
         getTracksHelper('short_term', otherAccessToken),
         getTracksHelper('medium_term', otherAccessToken),
         getTracksHelper('long_term', otherAccessToken),
-        getAllPlaylistTracks(myAccessToken),
-        getAllPlaylistTracks(otherAccessToken)
     ]).then(axios.spread((...responses) => {
+        console.log("Response lengths: " + (responses.length));
         myTracks = [...responses[0], ...responses[1],...responses[2]]
         otherTracks = [...responses[3], ...responses[4],...responses[5]]
-        return findMatchingItems(myTracks, otherTracks)
+        return findMatchingItems(myTracks, otherTracks);
     })).catch(error => {
         console.log(error);
     });
+    console.log(similarTracks.length);
     return similarTracks;
 }
 
@@ -125,7 +135,6 @@ async function getSharedArtists(myAccessToken, otherAccessToken) {
         getArtistsHelper('medium_term', otherAccessToken),
         getArtistsHelper('long_term', otherAccessToken)
     ]).then(axios.spread((...responses) => {
-        console.log(responses[0]);
         myTracks = [...responses[0], ...responses[1],...responses[2]]
         otherTracks = [...responses[3], ...responses[4],...responses[5]]
         return findMatchingItems(myTracks, otherTracks)
