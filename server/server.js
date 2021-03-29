@@ -205,25 +205,6 @@ app.get('/getAllUsers', (req, res) => {
 
 });
 
-// app.post('/getNewAccessToken', (req, res) => {
-//   const refreshToken = req.query.refreshToken;
-
-//   const params = {
-//     grant_type: "refresh_token", 
-//     refresh_token: refreshToken
-//   }
-
-//   axios.post('https://accounts.spotify.com/api/token', params, {
-//     headers: {
-//       'Authorization': 'Basic ' + Buffer.from(client_id + ':' + client_secret).toString('base64')
-//     }
-//   }).then(response => {
-//     console.log("New access token: " + response.data);
-//     res.send(response.data);
-//   })
-// })
-
-
 // FUNCTION: Get information about user
 app.get('/myInfo', (req, res) =>  {
   // Get a users' top artists
@@ -353,7 +334,7 @@ app.get('/getTopTracks', (req,res) => {
 
 
 //FUNCTION: Return matches in two users' top tracks
-app.get('/getSharedTopTracks', (req, res, next) => {
+app.get('/getSharedTopTracks', (req, res) => {
 
   //In the parameters we have two user ids
   //Return top tracks in short, medium, long term
@@ -385,7 +366,21 @@ app.get('/getSharedTopTracks', (req, res, next) => {
       helper.getNewAccessToken(doc.data().refresh_token).then(token => {
         otherAccessToken = token;
         //Call helper to get all the same shared top tracks
-        helper.getSharedTracks(myAccessToken, otherAccessToken);
+        helper.getSharedTracks(myAccessToken, otherAccessToken).then((response) => {
+          // Write pertinent info to db
+          //TODO: Check if the response is empty, don't waste the write
+          //TODO: Write to collection that holds all songs and artists
+          //TODO: Redirect to shared page
+          //Make db entry for ids 
+          const jointId = myUserId < otherUserId ? myUserId+otherUserId : otherUserId+myUserId
+          db.collection("Comparisons").doc(jointId).set({
+            trackGenerationTime: firestore.Timestamp.now(),
+            similarTracks: response
+          })
+          res.redirect('http://localhost:3000/shared?'+ querystring.stringify({
+              friendshipToken: jointId 
+          }))
+        })
       })
     }).catch(err => {
       //Couldn't find other in the db
