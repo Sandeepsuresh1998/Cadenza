@@ -252,6 +252,18 @@ app.get('/getPlaylists', (req, res) => {
 
 });
 
+app.get('/getUserFromDb', (req, res) => {
+  const userId = req.query.userId;
+  db.collection("Users").doc(userId).get().then(doc => {
+    if(!doc.exists) {
+      return res.send("Unable to find user").status(500);
+    } 
+
+    console.log(doc.data())
+    return res.send(doc.data()).status(200);
+  })
+})
+
 
 //FUNCTION: Get top currently playing song
 app.get('/getNowPlaying', (req, res) => {
@@ -446,9 +458,7 @@ app.get('/getSharedTopArtists', (req, res, next) => {
 
 app.get('/getComparisonData', (req, res) => {
   const friendshipToken = req.query.friendshipToken;
-  console.log(friendshipToken);
   db.collection('Comparisons').doc(friendshipToken).get().then((doc) => {
-    console.log(doc)
     // If the joint user page doesn't exist
     if(!doc.exists) {
       return res.send("Unable to find friendship in the db").status(500);
@@ -471,8 +481,13 @@ app.get('/getComparisonData', (req, res) => {
       }
     })
 
-    console.log(trimmedTrackArray);
-    return res.send(trimmedTrackArray).status(200);
+    const resObj = {
+      firstId: data.firstId,
+      secondId: data.secondId, 
+      tracks: trimmedTrackArray
+    }
+
+    return res.send(resObj).status(200);
   })
 })
 
