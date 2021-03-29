@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import queryString from 'query-string';
+import axios from 'axios'
 
 class Shared extends Component {
     constructor(props) {
@@ -11,7 +13,12 @@ class Shared extends Component {
     }
 
     componentDidMount() {
-        
+        let parsed = queryString.parse(window.location.search);
+        this.setState({
+            friendshipToken: parsed.friendshipToken
+        }, () => {
+            //Grab the tracks from db
+        });
     }
 
     render() {

@@ -367,13 +367,19 @@ app.get('/getSharedTopTracks', (req, res) => {
         otherAccessToken = token;
         //Call helper to get all the same shared top tracks
         helper.getSharedTracks(myAccessToken, otherAccessToken).then((response) => {
-          // Write pertinent info to db
           //TODO: Check if the response is empty, don't waste the write
-          //TODO: Write to collection that holds all songs and artists
-          //TODO: Redirect to shared page
+          // Set ordering for id
+          var firstId = otherUserId;
+          var secondId = myUserId;
+          if(myUserId < otherUserId) {
+            firstId = myUserId;
+            secondId = otherUserId
+          } 
           //Make db entry for ids 
-          const jointId = myUserId < otherUserId ? myUserId+otherUserId : otherUserId+myUserId
+          const jointId = firstId+secondId;
           db.collection("Comparisons").doc(jointId).set({
+            firstId, 
+            secondId,
             trackGenerationTime: firestore.Timestamp.now(),
             similarTracks: response
           })

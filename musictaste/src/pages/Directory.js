@@ -27,23 +27,25 @@ class Directory extends Component {
     }
 
     handleProfileClick = (userId) => {
-        //TODO: Make get call to share similar tracks
-        //TODO: Pass parameters of my user id and cheta's
-        axios.get('/getSharedTopTracks', {
-            params: {
-                me: "1223546560",
-                other: userId,   
-            }
-        }).then((res) => {
-            const pair = {
-                me: "12233546560",
-                other: userId
-            }
-            this.props.history.push({
-                pathname: "/Shared",
-                data: pair
-            })
-        })
+        // Dirty way of circumventing cors
+        // TODO: Research better way to redirect
+        const url = `https://spotifybackend.herokuapp.com/getSharedTopTracks?me=1223546560&other=${userId}`
+        window.location.href = url;
+        // axios.get('/getSharedTopTracks', {
+        //     params: {
+        //         me: "1223546560",
+        //         other: userId,   
+        //     }
+        // }).then((res) => {
+        //     const pair = {
+        //         me: "12233546560",
+        //         other: userId
+        //     }
+        //     this.props.history.push({
+        //         pathname: "/Shared",
+        //         data: pair
+        //     })
+        // })
     }
 
     render() {
