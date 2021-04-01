@@ -1,12 +1,13 @@
 import React, { Component } from 'react'
 import queryString from 'query-string';
 import axios from 'axios'
-import "../styles/Home.css";
 import Navbar from 'react-bootstrap/Navbar'
 import TrackPreview from '../components/TrackPreview';
 import ArtistPreview from '../components/ArtistPreview';
 import ScrollAnimation from 'react-animate-on-scroll'
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import "../styles/Home.css";
+
 
 //axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
 axios.defaults.baseURL = "http://localhost:8888";
@@ -35,6 +36,7 @@ class Home extends Component {
         this.getMyInfo = this.getMyInfo.bind(this);
         this.getTopArtists = this.getTopArtists.bind(this);
         this.getNowPlaying = this.getNowPlaying.bind(this);
+        this.handleButtonClick = this.handleButtonClick.bind(this);
     }
 
     componentDidMount() {
@@ -64,6 +66,9 @@ class Home extends Component {
         
     }
 
+    handleButtonClick() {
+        this.history.location.push("/Directory")
+    }
 
     // Currently Playing Track
     getNowPlaying() {
@@ -75,12 +80,14 @@ class Home extends Component {
             // Get Now playing 
             // TODO: Make now playing dynamic and error robust
             if(res.data) {
+                console.log(res.data)
                 this.setState({
                     isPlaying: true,
                     currenlyPlaying: {
                         name: res.data.item.name, 
                         album_img: res.data.item.album.images[0].url,
-                        artists: res.data.item.artists
+                        artists: res.data.item.artists,
+                        link: res.data.item.external_urls.spotify
                     }
                 })
             } else {
@@ -171,6 +178,7 @@ class Home extends Component {
                 "accessToken": this.state.accessToken
             }
         }).then((res) => {
+            console.log("Top Tracks")
             console.log(res.data.items);
             this.setState({
                 topTracks: res.data.items
@@ -182,28 +190,27 @@ class Home extends Component {
         return (
             <div className="root">
                 {/* This is some navbar code I'll come back to */}
-                {/* <Navbar bg="black">
-                    <Navbar.Brand href="/home">
-                        <img 
-                            src={this.state.image}
-                            width="30"
-                            height="30"
-                            className="d-inline-block align-top"
-                        />
-                    </Navbar.Brand>
-                </Navbar> */}
+                
                 <div className="headerContainer">
                     {/* <h1 style={{color: "#1DB954"}} className="header">Sounds</h1> */}
-                    {this.state.isPlaying ?
-                        <TrackPreview 
-                            name={this.state.currenlyPlaying.name} 
-                            album_img={this.state.currenlyPlaying.album_img}
-                            artists={this.state.currenlyPlaying.artists}
-                        /> :
-                        null
-                    }
+                    {/* Personal Info */}
+                    <div className="info">
+                        {/* <img className="profile" src={this.state.image} /> */}
+                        <h1>{this.state.name}</h1>
+                    </div>
+                    <div>
+                        {this.state.isPlaying ?
+                            <TrackPreview 
+                                name={this.state.currenlyPlaying.name} 
+                                album_img={this.state.currenlyPlaying.album_img}
+                                artists={this.state.currenlyPlaying.artists}
+                                link={this.state.currenlyPlaying.link}
+                            /> :
+                            null
+                        }
+                    </div>  
                 </div>
-
+                    
                 {/* Top Tracks Note: Currently Short Term */}
                 <div className="tracksContainer">
                     <div className="tracksTitle">
@@ -218,11 +225,11 @@ class Home extends Component {
                                     name={listitem.name} 
                                     artists={listitem.artists}
                                     album_img={listitem.album.images[0].url}
+                                    link={listitem.external_urls.spotify}
                                 />
                             ))}
                         </ul>
                     </div>
-                    
                 </div>
                 
                 
@@ -240,24 +247,21 @@ class Home extends Component {
 
                     <div className="artistsTitle">
                         <h1>My Top Artists</h1>
-                    </div>
+                    </div>  
+
+                </div>                  
+                            
+                <div className="buttonContainer">
+                    <Link to="/Directory">
+                        <button className="directoryButton">
+                            Find Friends
+                        </button>
+                    </Link>
                     
-                </div>                    
-                {/* <button onClick={this.getTopArtists}>Playlist</button> */}]
-                {/* Personal Info */}
-                <div className="info">
-                    <h1>Your Info</h1>
-                    <img className="profile" src={this.state.image} />
-                    <h1>{this.state.name}</h1>
-                    <h1>{this.state.email}</h1>
-                    <p>{this.state.accessToken}</p>
                 </div>
 
-                {/* TODO: Make this only appear if you're on a friend's profile */}
             </div>
-
-            
-        )
+        ) 
     }
 }
 

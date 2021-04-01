@@ -31,27 +31,12 @@ class Directory extends Component {
         // TODO: Research better way to redirect
         const url = `https://spotifybackend.herokuapp.com/getSharedTopTracks?me=1223546560&other=${userId}`
         window.location.href = url;
-        // axios.get('/getSharedTopTracks', {
-        //     params: {
-        //         me: "1223546560",
-        //         other: userId,   
-        //     }
-        // }).then((res) => {
-        //     const pair = {
-        //         me: "12233546560",
-        //         other: userId
-        //     }
-        //     this.props.history.push({
-        //         pathname: "/Shared",
-        //         data: pair
-        //     })
-        // })
     }
 
     render() {
         return (
             <div className="root">
-                <div className="listContainer">
+                <div className="listContainer"> 
                     <ul>
                             {this.state.users.map(user => (
                                 <Link to="/Shared">
@@ -61,7 +46,6 @@ class Directory extends Component {
                                 </Link>
                             ))}    
                     </ul>
-                    
                 </div>
             </div>
             

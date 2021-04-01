@@ -8,7 +8,8 @@ class TrackPreview extends PureComponent {
         this.state = {
            name: "", 
            album_img: "", 
-           artist: ""
+           artist: "",
+           link: "",
         }
     }
     
@@ -17,6 +18,7 @@ class TrackPreview extends PureComponent {
             name: this.props.name,
             album_img: this.props.album_img, 
             imgMult: this.props.imgMult,
+            link: this.props.link
         })
         
         if(this.props.artists) {
@@ -30,10 +32,14 @@ class TrackPreview extends PureComponent {
 
     render() {
         return (
-            <div className="track-container">
-                <img className="track-img" src={this.state.album_img} style={{width:'80px', height:'80px', borderRadius:"40px"}} />
-                <h1>{this.state.name} - {this.state.artist}</h1>
-            </div>
+                
+                    <div className="track-container">
+                        <a href={this.state.link}>
+                            <img className="track-img" src={this.state.album_img} style={{width:'80px', height:'80px', borderRadius:"40px"}} />
+                            <h1>{this.state.name} - {this.state.artist}</h1>
+                        </a>
+                    </div>  
+            
         )
     }
 }
