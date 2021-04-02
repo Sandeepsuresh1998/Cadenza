@@ -61,6 +61,10 @@ function getArtistsHelper(timeRange, accessToken) {
     return axios.get("https://api.spotify.com/v1/me/top/artists?time_range=" + timeRange + "&limit=50", config).then(response => response.data.items)
 }
 
+function cleanPlaylistTrack(track) {
+    
+}
+
 function getTracksHelper(timeRange, accessToken) {
     //Create header
     const config = {
@@ -100,10 +104,12 @@ async function getAllPlaylistTracks(accessToken) {
             //Push all playlist track objs into an array
             allTracks = [].concat(...res)
             console.log("All tracks in my function call");
+            console.log(allTracks.length)
             return allTracks;
         })
     })
 }
+
 
 async function getTracksForSinglePlaylist(id, accessToken) {
     //Create header
@@ -115,22 +121,21 @@ async function getTracksForSinglePlaylist(id, accessToken) {
     return playlistTracks;
 }
 
-async function getSharedTracks(myAccessToken, otherAccessToken) {
+async function getSharedPlaylistTracks(myAccessToken, otherAccessToken) {
+    var playlistTracks = await getAllPlaylistTracks(myAccessToken).then(myPlaylistTracksRes => {
+        
+        return getAllPlaylistTracks(otherAccessToken).then(otherPlaylistTracksRes => {
+            console.log("Other playlist tracks: ");
+            console.log(otherPlaylistTracksRes.length);
+            return findMatchingItems(myPlaylistTracksRes,otherPlaylistTracksRes)
+        });
+    })
+
+    return playlistTracks;
+}
+
+async function getSharedTopTracks(myAccessToken, otherAccessToken) {
     //All the requests for all the different ranges we get access to
-
-
-    // var playlistTracks = await getAllPlaylistTracks(myAccessToken).then(myPlaylistTracksRes => {
-    //     // console.log("My playlist tracks:")
-    //     // console.log(myPlaylistTracksRes.length)
-    //     getAllPlaylistTracks(otherAccessToken).then(otherPlaylistTracksRes => {
-    //         // console.log("Other playlist tracks: ");
-    //         // console.log(otherPlaylistTracksRes.length);
-    //         // console.log(`Length after: ${myPlaylistTracksRes.length}`)
-    //         //console.log(otherPlaylistTracksRes)
-    //         console.log(otherPlaylistTracksRes.length);
-    //         return findMatchingItems(myPlaylistTracksRes,otherPlaylistTracksRes)
-    //     });
-    // })
 
     var allSharedTracks = await axios.all([
             getTracksHelper('short_term', myAccessToken),
@@ -190,4 +195,4 @@ async function getSharedArtists(myAccessToken, otherAccessToken) {
 }
 
 
-module.exports = {getNewAccessToken, getSharedTracks, getSharedArtists}
+module.exports = {getNewAccessToken, getSharedTopTracks, getSharedPlaylistTracks, getSharedArtists}

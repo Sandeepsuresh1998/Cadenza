@@ -348,9 +348,18 @@ app.get('/getTopTracks', (req,res) => {
 
 });
 
+app.get('/deleteComparison', (req, res) => {
+  db.collection("Comparisons").doc("12235465601223546560").delete().then(() => {
+    console.log("Document successfully deleted!");
+    res.send("Document successfully deleted").status(200)
+  })
+}) 
+
 
 //FUNCTION: Return matches in two users' top tracks
 app.get('/getSharedTopTracks', (req, res) => {
+
+
 
   //In the parameters we have two user ids
   //Return top tracks in short, medium, long term
@@ -359,6 +368,9 @@ app.get('/getSharedTopTracks', (req, res) => {
   //For now by "my" I mean the logged in user
   const myUserId = req.query.me;
   const otherUserId = req.query.other;
+  if(myUserId == otherUserId) {
+    res.send("Can't compare the same person").status(500);
+  }
   var otherAccessToken;
   var myAccessToken;
 
@@ -382,27 +394,39 @@ app.get('/getSharedTopTracks', (req, res) => {
       helper.getNewAccessToken(doc.data().refresh_token).then(token => {
         otherAccessToken = token;
         //Call helper to get all the same shared top tracks
-        helper.getSharedTracks(myAccessToken, otherAccessToken).then((response) => {
+        helper.getSharedTopTracks(myAccessToken, otherAccessToken).then((response) => {
           //TODO: Check if the response is empty, don't waste the write
-          console.log(response)
-          // Set ordering for id
-          var firstId = otherUserId;
-          var secondId = myUserId;
-          if(myUserId < otherUserId) {
-            firstId = myUserId;
-            secondId = otherUserId
-          } 
-          //Make db entry for ids 
-          const jointId = firstId+secondId;
-          db.collection("Comparisons").doc(jointId).set({
-            firstId, 
-            secondId,
-            trackGenerationTime: firestore.Timestamp.now(),
-            similarTracks: response
+          //console.log(response)
+
+          helper.getSharedPlaylistTracks(myAccessToken, otherAccessToken).then((playlistRes) => {
+              // Set ordering for id
+              var firstId = otherUserId;
+              var secondId = myUserId;
+              if(myUserId < otherUserId) {
+                firstId = myUserId;
+                secondId = otherUserId
+              } 
+
+              //console.log(response);
+              //TODO: Check if either is empty
+              console.log(playlistRes);
+              var cleanedPlaylistTracks = playlistRes.map(item => item.track)
+              similarTracks = [...response, ...cleanedPlaylistTracks];
+              console.log(`Similar tracks length: ${similarTracks.length}`);
+
+              //Make db entry for ids 
+              const jointId = firstId+secondId;
+              db.collection("Comparisons").doc(jointId).set({
+                firstId, 
+                secondId,
+                trackGenerationTime: firestore.Timestamp.now(),
+                similarTracks,
+              })
+              res.redirect('http://localhost:3000/shared?'+ querystring.stringify({
+                  friendshipToken: jointId 
+              }))
           })
-          res.redirect('http://localhost:3000/shared?'+ querystring.stringify({
-              friendshipToken: jointId 
-          }))
+          
         })
       })
     }).catch(err => {
