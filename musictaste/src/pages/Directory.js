@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import ProfilePreview from '../components/ProfilePreview'
 import {Link} from 'react-router-dom';
+import '../styles/Directory.css'
 
 class Directory extends Component {
     constructor(props) {
@@ -31,37 +32,20 @@ class Directory extends Component {
         // TODO: Research better way to redirect
         const url = `https://spotifybackend.herokuapp.com/getSharedTopTracks?me=1223546560&other=${userId}`
         window.location.href = url;
-        // axios.get('/getSharedTopTracks', {
-        //     params: {
-        //         me: "1223546560",
-        //         other: userId,   
-        //     }
-        // }).then((res) => {
-        //     const pair = {
-        //         me: "12233546560",
-        //         other: userId
-        //     }
-        //     this.props.history.push({
-        //         pathname: "/Shared",
-        //         data: pair
-        //     })
-        // })
     }
 
     render() {
         return (
             <div className="root">
-                <div className="listContainer">
+                <h1>Directory</h1>
+                <div className="listContainer"> 
                     <ul>
                             {this.state.users.map(user => (
-                                <Link to="/Shared">
-                                    <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
-                                        <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
-                                    </button>
-                                </Link>
+                                <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
+                                    <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
+                                </button>
                             ))}    
                     </ul>
-                    
                 </div>
             </div>
             

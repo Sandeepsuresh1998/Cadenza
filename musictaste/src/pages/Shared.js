@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import queryString from 'query-string';
 import axios from 'axios'
 import TrackPreview from '../components/TrackPreview';
+import "../styles/Shared.css";
 
 class Shared extends Component {
     constructor(props) {
@@ -32,6 +33,8 @@ class Shared extends Component {
         axios.get('/getComparisonData', {params: {
             'friendshipToken': this.state.friendshipToken
         }}).then(res => {
+            //TODO: Check if comparison exists and compute if not
+            
             // Set the profile ids
             console.log(`First ${res.data.firstId}, Second: ${res.data.secondId}`)
             this.grabUserData(res.data.firstId, 1);
@@ -60,10 +63,18 @@ class Shared extends Component {
     render() {
         return (
             <div className="root">
-                <div className="profiles">
-                    <img src={this.state.firstUser.img}></img>
-                    <img src={this.state.secondUser.img}></img>
+                <div className="headerContainer">
+                    <div className="profileContainer">
+                        <div className="profilePics">
+                            <img className="profile" src={this.state.firstUser.img}></img>
+                            <img className="profile" src={this.state.secondUser.img}></img>
+                        </div>
+                        
+                        <h1>{this.state.firstUser.name} x {this.state.secondUser.name}</h1>
+                    </div>
                 </div>
+
+                
                 <div className="tracks">
                     {this.state.sharedTracks.map(track => (
                         <TrackPreview

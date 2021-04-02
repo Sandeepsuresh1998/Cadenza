@@ -1,0 +1,21 @@
+.root {
+    background-color: #282828;
+    display: flex;
+    flex-direction: column;
+}
+.profile {
+    height: 200px;
+    width: 200px;
+    border-radius: 100px;
+}
+
+.profileContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profilePics img {
+    margin: 10px;
+}
