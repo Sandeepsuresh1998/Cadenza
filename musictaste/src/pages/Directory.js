@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import ProfilePreview from '../components/ProfilePreview'
 import {Link} from 'react-router-dom';
+import '../styles/Directory.css'
 
 class Directory extends Component {
     constructor(props) {
@@ -36,14 +37,13 @@ class Directory extends Component {
     render() {
         return (
             <div className="root">
+                <h1>Directory</h1>
                 <div className="listContainer"> 
                     <ul>
                             {this.state.users.map(user => (
-                                <Link to="/Shared">
-                                    <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
-                                        <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
-                                    </button>
-                                </Link>
+                                <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
+                                    <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
+                                </button>
                             ))}    
                     </ul>
                 </div>
