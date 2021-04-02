@@ -506,7 +506,8 @@ app.get('/getComparisonData', (req, res) => {
             link: artist.external_urls.spotify
           }
         }),
-        img: track.album.images[0].url
+        img: track.album.images[0].url,
+        link: track.external_urls.spotify
       }
     })
 
