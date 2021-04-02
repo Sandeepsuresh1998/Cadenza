@@ -1,4 +1,5 @@
 var axios = require('axios');
+const { promises } = require('dns');
 const { response } = require('express');
 var querystring = require('querystring');
 var client_id = process.env.SPOTIFY_CLIENT_ID; // Your client id
@@ -7,8 +8,8 @@ var request = require('request'); // "Request" library
 
 function findMatchingItems(myItems, otherItems) {
 
-    console.log(myItems.length);
-    console.log(otherItems.length);
+    console.log(myItems.length)
+    console.log(otherItems.length)
 
     //TODO: Review algorithms to see if there is faster way to do this
     // O(n^2)
@@ -84,46 +85,88 @@ async function getAllPlaylistTracks(accessToken) {
     }
 
     //First get all the playlist ids, max limit 50
+    let playlistPromises = []
+
     return axios.get("https://api.spotify.com/v1/me/playlists?limit=50", config).then(response => {
         //Extract ids from response
         const playlistIds = response.data.items.map(item => item.id) 
 
         //For each id get as many tracks as you can
         const playlistPromises = playlistIds.map(id => {
-            return axios.get(`https://api.spotify.com/v1/playlists/${id}/tracks?limit=100`, config).then(res => res.data.items);
+            return getTracksForSinglePlaylist(id, accessToken)
         })
-
-        return playlistPromises;
-
-        // return axios.all(playlistPromises).then(res => {
-        //     //Push all playlist track objs into an array
-        //     allTracks = [].concat(...res)
-        //     console.log("All tracks in my function call");
-        //     return allTracks;
-        // })
+        //Have all the playlist promises
+        return axios.all(playlistPromises).then(res => {
+            //Push all playlist track objs into an array
+            allTracks = [].concat(...res)
+            console.log("All tracks in my function call");
+            return allTracks;
+        })
     })
+}
+
+async function getTracksForSinglePlaylist(id, accessToken) {
+    //Create header
+    const config = {
+        headers: {Authorization : `Bearer ${accessToken}`},
+    }
+
+    let playlistTracks = await axios.get(`https://api.spotify.com/v1/playlists/${id}/tracks?limit=100`, config).then(res => res.data.items);
+    return playlistTracks;
 }
 
 async function getSharedTracks(myAccessToken, otherAccessToken) {
     //All the requests for all the different ranges we get access to
 
-    const similarTracks = await axios.all([
-        getTracksHelper('short_term', myAccessToken),
-        getTracksHelper('medium_term', myAccessToken),
-        getTracksHelper('long_term', myAccessToken),
-        getTracksHelper('short_term', otherAccessToken),
-        getTracksHelper('medium_term', otherAccessToken),
-        getTracksHelper('long_term', otherAccessToken),
+
+    // var playlistTracks = await getAllPlaylistTracks(myAccessToken).then(myPlaylistTracksRes => {
+    //     // console.log("My playlist tracks:")
+    //     // console.log(myPlaylistTracksRes.length)
+    //     getAllPlaylistTracks(otherAccessToken).then(otherPlaylistTracksRes => {
+    //         // console.log("Other playlist tracks: ");
+    //         // console.log(otherPlaylistTracksRes.length);
+    //         // console.log(`Length after: ${myPlaylistTracksRes.length}`)
+    //         //console.log(otherPlaylistTracksRes)
+    //         console.log(otherPlaylistTracksRes.length);
+    //         return findMatchingItems(myPlaylistTracksRes,otherPlaylistTracksRes)
+    //     });
+    // })
+
+    var allSharedTracks = await axios.all([
+            getTracksHelper('short_term', myAccessToken),
+            getTracksHelper('medium_term', myAccessToken),
+            getTracksHelper('long_term', myAccessToken),
+            getTracksHelper('short_term', otherAccessToken),
+            getTracksHelper('medium_term', otherAccessToken),
+            getTracksHelper('long_term', otherAccessToken),
     ]).then(axios.spread((...responses) => {
-        console.log("Response lengths: " + (responses.length));
-        myTracks = [...responses[0], ...responses[1],...responses[2]]
-        otherTracks = [...responses[3], ...responses[4],...responses[5]]
+        //console.log("Response lengths: " + (responses.length));
+        myTracks = [...responses[0], ...responses[1],...responses[2]];
+        otherTracks = [...responses[3], ...responses[4],...responses[5]];
         return findMatchingItems(myTracks, otherTracks);
-    })).catch(error => {
-        console.log(error);
-    });
-    console.log(similarTracks.length);
-    return similarTracks;
+    })) 
+
+    return allSharedTracks;
+    
+
+    // const allSharedTopTracks = await axios.all([
+    //     getTracksHelper('short_term', myAccessToken),
+    //     getTracksHelper('medium_term', myAccessToken),
+    //     getTracksHelper('long_term', myAccessToken),
+    //     getTracksHelper('short_term', otherAccessToken),
+    //     getTracksHelper('medium_term', otherAccessToken),
+    //     getTracksHelper('long_term', otherAccessToken),
+    // ]).then(axios.spread((...responses) => {
+    //     //console.log("Response lengths: " + (responses.length));
+    //     myTracks = [...responses[0], ...responses[1],...responses[2]];
+    //     otherTracks = [...responses[3], ...responses[4],...responses[5]];
+    //     return findMatchingItems(myTracks, otherTracks);
+    // })).catch(error => {
+    //     console.log(error);
+    // });
+    
+    return findMatchingItems(allSharedPlaylistTracks)
+
 }
 
 async function getSharedArtists(myAccessToken, otherAccessToken) {

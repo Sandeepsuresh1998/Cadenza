@@ -123,7 +123,11 @@ app.get('/callback', (req, res) =>  {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log(body);
+          // In case there is no image
+          var url = ""
+          if(typeof body.images !== 'undefined') {
+              url = body.images[0].url 
+          }
           
           const userData = {
             name: body.display_name,
@@ -131,7 +135,7 @@ app.get('/callback', (req, res) =>  {
             userId: body.id,
             access_token: access_token,
             refresh_token: refresh_token, 
-            img: body.images[0].url,
+            img: url,
             last_login: firestore.Timestamp.now()
           }
 
@@ -380,6 +384,7 @@ app.get('/getSharedTopTracks', (req, res) => {
         //Call helper to get all the same shared top tracks
         helper.getSharedTracks(myAccessToken, otherAccessToken).then((response) => {
           //TODO: Check if the response is empty, don't waste the write
+          console.log(response)
           // Set ordering for id
           var firstId = otherUserId;
           var secondId = myUserId;
