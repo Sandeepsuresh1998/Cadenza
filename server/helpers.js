@@ -61,10 +61,24 @@ function getArtistsHelper(timeRange, accessToken) {
     return axios.get("https://api.spotify.com/v1/me/top/artists?time_range=" + timeRange + "&limit=50", config).then(response => response.data.items)
 }
 
-function cleanPlaylistTrack(track) {
-    
-}
+function getFriendshipToken(myUserId, otherUserId) {
+    // Set ordering for id
+    var firstId = otherUserId;
+    var secondId = myUserId;
+    if(myUserId < otherUserId) {
+      firstId = myUserId;
+      secondId = otherUserId
+    } 
 
+    result = {
+        firstId,
+        secondId, 
+        'friendshipToken' : firstId+secondId
+    }
+
+    return result;
+
+}
 function getTracksHelper(timeRange, accessToken) {
     //Create header
     const config = {
@@ -72,6 +86,9 @@ function getTracksHelper(timeRange, accessToken) {
     }
     
     return axios.get("https://api.spotify.com/v1/me/top/tracks?time_range=" + timeRange + "&limit=50",config).then(response => response.data.items)
+    .catch(err => {
+        console.log(err);
+    })
 }
 
 
@@ -93,12 +110,12 @@ async function getAllPlaylistTracks(accessToken) {
 
     return axios.get("https://api.spotify.com/v1/me/playlists?limit=50", config).then(response => {
         //Extract ids from response
-        const playlistIds = response.data.items.map(item => item.id) 
-
+        const playlistIds = response.data.items.map(item => item.id);
+        console.log(`Number of playlists: ${playlistIds.length}`);
         //For each id get as many tracks as you can
         const playlistPromises = playlistIds.map(id => {
             return getTracksForSinglePlaylist(id, accessToken)
-        })
+        });
         //Have all the playlist promises
         return axios.all(playlistPromises).then(res => {
             //Push all playlist track objs into an array
@@ -106,7 +123,9 @@ async function getAllPlaylistTracks(accessToken) {
             console.log("All tracks in my function call");
             console.log(allTracks.length)
             return allTracks;
-        })
+        });
+    }).catch(error => {
+        console.log(error);
     })
 }
 
@@ -152,26 +171,6 @@ async function getSharedTopTracks(myAccessToken, otherAccessToken) {
     })) 
 
     return allSharedTracks;
-    
-
-    // const allSharedTopTracks = await axios.all([
-    //     getTracksHelper('short_term', myAccessToken),
-    //     getTracksHelper('medium_term', myAccessToken),
-    //     getTracksHelper('long_term', myAccessToken),
-    //     getTracksHelper('short_term', otherAccessToken),
-    //     getTracksHelper('medium_term', otherAccessToken),
-    //     getTracksHelper('long_term', otherAccessToken),
-    // ]).then(axios.spread((...responses) => {
-    //     //console.log("Response lengths: " + (responses.length));
-    //     myTracks = [...responses[0], ...responses[1],...responses[2]];
-    //     otherTracks = [...responses[3], ...responses[4],...responses[5]];
-    //     return findMatchingItems(myTracks, otherTracks);
-    // })).catch(error => {
-    //     console.log(error);
-    // });
-    
-    return findMatchingItems(allSharedPlaylistTracks)
-
 }
 
 async function getSharedArtists(myAccessToken, otherAccessToken) {
@@ -195,4 +194,4 @@ async function getSharedArtists(myAccessToken, otherAccessToken) {
 }
 
 
-module.exports = {getNewAccessToken, getSharedTopTracks, getSharedPlaylistTracks, getSharedArtists}
+module.exports = {getNewAccessToken, getSharedTopTracks, getSharedPlaylistTracks, getSharedArtists, getFriendshipToken}

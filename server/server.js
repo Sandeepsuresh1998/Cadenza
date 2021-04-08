@@ -357,7 +357,7 @@ app.get('/deleteComparison', (req, res) => {
 
 
 //FUNCTION: Return matches in two users' top tracks
-app.get('/getSharedTopTracks', (req, res) => {
+app.get('/computeSharedTopTracks', (req, res) => {
 
 
 
@@ -398,34 +398,40 @@ app.get('/getSharedTopTracks', (req, res) => {
           //TODO: Check if the response is empty, don't waste the write
           //console.log(response)
 
-          helper.getSharedPlaylistTracks(myAccessToken, otherAccessToken).then((playlistRes) => {
-              // Set ordering for id
-              var firstId = otherUserId;
-              var secondId = myUserId;
-              if(myUserId < otherUserId) {
-                firstId = myUserId;
-                secondId = otherUserId
-              } 
+          sharedTracks = [...response];
+          
+          const friendshipInfo = helper.getFriendshipToken(myUserId, otherUserId);
+          console.log(friendshipInfo);
+          db.collection("Comparisons").doc(friendshipInfo.friendshipToken).update({
+            'firstId': friendshipInfo.firstId, 
+            'secondId': friendshipInfo.secondId,
+            'trackGenerationTime': firestore.Timestamp.now(),
+            'sharedTracks': sharedTracks,
+          })
 
-              //console.log(response);
+          return res.send({friendshipInfo}).status(200);
+          /*
+          helper.getSharedPlaylistTracks(myAccessToken, otherAccessToken).then((playlistRes) => {
+              
               //TODO: Check if either is empty
               console.log(playlistRes);
               var cleanedPlaylistTracks = playlistRes.map(item => item.track)
-              similarTracks = [...response, ...cleanedPlaylistTracks];
-              console.log(`Similar tracks length: ${similarTracks.length}`);
+              sharedTracks = [...response, ...cleanedPlaylistTracks];
+              console.log(`Similar tracks length: ${sharedTracks.length}`);
 
               //Make db entry for ids 
-              const jointId = firstId+secondId;
-              db.collection("Comparisons").doc(jointId).set({
-                firstId, 
-                secondId,
-                trackGenerationTime: firestore.Timestamp.now(),
-                similarTracks,
+              const friendshipInfo = helper.getFriendshipToken(myUserId, otherUserId);
+              console.log(friendshipInfo);
+              db.collection("Comparisons").doc(friendshipInfo.friendshipToken).update({
+                'firstId': friendshipInfo.firstId, 
+                'secondId': friendshipInfo.secondId,
+                'trackGenerationTime': firestore.Timestamp.now(),
+                'sharedTracks': sharedTracks,
               })
-              res.redirect('http://localhost:3000/shared?'+ querystring.stringify({
-                  friendshipToken: jointId 
-              }))
+              //Send the friendship token to the client to redirect
+              return res.send({friendshipInfo}).status(200);
           })
+          */
           
         })
       })
@@ -441,7 +447,7 @@ app.get('/getSharedTopTracks', (req, res) => {
 });
 
 //FUNCTION: Return matches in two users' top artists
-app.get('/getSharedTopArtists', (req, res, next) => {
+app.get('/computeSharedTopArtists', (req, res, next) => {
 
   //In the parameters we have two user ids
   //Return top artists in short, medium, long term
@@ -472,7 +478,26 @@ app.get('/getSharedTopArtists', (req, res, next) => {
       helper.getNewAccessToken(doc.data().refresh_token).then(token => {
         otherAccessToken = token;
         //Call helper to get all the same shared top tracks
-        helper.getSharedArtists(myAccessToken, otherAccessToken);
+        helper.getSharedArtists(myAccessToken, otherAccessToken).then(artistResponse => {
+          //Make id for friendship
+          const friendshipInfo = helper.getFriendshipToken(myUserId, otherUserId);
+          //Write to db
+          data = {
+            'firstId': friendshipInfo.firstId, 
+            'secondId': friendshipInfo.secondId,
+            'artistGenerationTime': firestore.Timestamp.now(),
+            'sharedArtists': artistResponse
+          }
+          db.collection("Comparisons").doc(friendshipInfo.friendshipToken).update({
+            ...data
+          }).catch(error => {
+            console.log("Couldn't find document");
+            db.collection("Comparisons").doc(friendshipInfo.friendshipToken).set({...data})
+          });
+          
+          return res.send("Finished computing shared artists").status(200);
+        });
+        
       })
     }).catch(err => {
       //Couldn't find other in the db
@@ -495,11 +520,10 @@ app.get('/getComparisonData', (req, res) => {
     const data = doc.data();
 
     //Grab track data
-    trimmedTrackArray = data.similarTracks.map(track => {
+    trimmedTrackArray = data.sharedTracks.map(track => {
       return trackObj = {
         name: track.name, 
         id: track.id,
-        url: track.external_urls.spotify,
         artist: track.artists.map(artist => {
           return artistObj = {
             name: artist.name, 
@@ -511,10 +535,20 @@ app.get('/getComparisonData', (req, res) => {
       }
     })
 
+    trimmedArtistsArray = data.sharedArtists.map(artist => {
+      return artistObj = {
+        name: artist.name, 
+        id: artist.id, 
+        url: artist.external_urls.spotify,
+        img: artist.images[0].url
+      }
+    })
+
     const resObj = {
       firstId: data.firstId,
       secondId: data.secondId, 
-      tracks: trimmedTrackArray
+      tracks: trimmedTrackArray,
+      artists: trimmedArtistsArray
     }
 
     return res.send(resObj).status(200);

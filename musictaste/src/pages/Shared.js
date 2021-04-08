@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import axios from 'axios'
 import TrackPreview from '../components/TrackPreview';
 import "../styles/Shared.css";
+import ArtistPreview from '../components/ArtistPreview';
 
 class Shared extends Component {
     constructor(props) {
@@ -12,7 +13,8 @@ class Shared extends Component {
             firstUser: {},
             secondUser: {},
             friendshipToken: "",
-            sharedTracks: []
+            sharedTracks: [],
+            sharedArtists: []
         }
         this.grabSimilarData = this.grabSimilarData.bind(this);
         this.grabUserData = this.grabUserData.bind(this);
@@ -34,7 +36,7 @@ class Shared extends Component {
             'friendshipToken': this.state.friendshipToken
         }}).then(res => {
             //TODO: Check if comparison exists and compute if not
-            
+            console.log(res);
             // Set the profile ids
             console.log(`First ${res.data.firstId}, Second: ${res.data.secondId}`)
             this.grabUserData(res.data.firstId, 1);
@@ -42,7 +44,8 @@ class Shared extends Component {
 
             //Set shared tracks
             this.setState({
-                sharedTracks: res.data.tracks
+                sharedTracks: res.data.tracks,
+                sharedArtists: res.data.artists,
             })
         })
     }
@@ -82,6 +85,18 @@ class Shared extends Component {
                             name={track.name}
                             artists={track.artist}
                             album_img={track.img}
+                            link={track.link}
+                        />
+                    ))}
+                </div>
+
+                <div className="artists">
+                    <h1>Artists WE Like</h1>
+                    {this.state.sharedArtists.map(artist => (
+                        <ArtistPreview
+                            name={artist.name}
+                            img={artist.img}
+                            link={artist.url}
                         />
                     ))}
                 </div>

@@ -30,8 +30,28 @@ class Directory extends Component {
     handleProfileClick = (userId) => {
         // Dirty way of circumventing cors
         // TODO: Research better way to redirect
-        const url = `https://spotifybackend.herokuapp.com/getSharedTopTracks?me=1223546560&other=${userId}`
-        window.location.href = url;
+        // TODO: Call shared top artists too
+        const ids = {
+            'me': 1223546560, 
+            'other': userId
+        }
+
+        axios.get('/computeSharedTopArtists', {params: ids}).then(res => {
+            console.log(res);
+            axios.get('computeSharedTopTracks', {params: ids}).then(res => {
+                console.log(res);
+                const friendshipToken = res.data.friendshipInfo.friendshipToken;
+                const url = `/Shared?friendshipToken=${friendshipToken}`
+                window.location.href = url;
+
+            }).catch(err => {
+                console.log("Something went wrong in computing top tracks");
+                console.log(err);
+            })
+        }).catch(err => {
+            console.log("Something went wrong in computing artists");
+            console.log(err);
+        })
     }
 
     render() {
