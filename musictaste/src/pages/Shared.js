@@ -79,26 +79,42 @@ class Shared extends Component {
 
                 
                 <div className="tracks">
-                    {this.state.sharedTracks.map(track => (
-                        <TrackPreview
-                            key={track.id}
-                            name={track.name}
-                            artists={track.artist}
-                            album_img={track.img}
-                            link={track.link}
-                        />
-                    ))}
+                    <div>
+                        <h1 className="banner">Our Songs</h1>
+                    </div>
+                    <div>
+                        <ul>   
+                            {this.state.sharedTracks.map(track => (
+                                <TrackPreview
+                                    key={track.id}
+                                    name={track.name}
+                                    artists={track.artist}
+                                    album_img={track.img}
+                                    link={track.link}
+                                />
+                            ))}
+                        </ul>
+                        
+                    </div>
+                    
                 </div>
 
                 <div className="artists">
-                    <h1>Artists WE Like</h1>
-                    {this.state.sharedArtists.map(artist => (
-                        <ArtistPreview
-                            name={artist.name}
-                            img={artist.img}
-                            link={artist.url}
-                        />
-                    ))}
+                    <div className="">  
+                        <ul>
+                            {this.state.sharedArtists.map(artist => (
+                                <ArtistPreview
+                                    name={artist.name}
+                                    img={artist.img}
+                                    link={artist.url}
+                                />
+                            ))}
+                        </ul>
+                    </div>
+                    <div>
+                        <h1 className="banner">Artists WE Like</h1>
+                    </div>
+                    
                 </div>
             </div>
         )
