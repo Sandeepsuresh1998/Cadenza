@@ -1,13 +1,17 @@
 import React, { Component } from 'react'
 import queryString from 'query-string';
-import axios from 'axios'
+import axios from 'axios';
+import styled, { keyframes } from 'styled-components';
 import Navbar from 'react-bootstrap/Navbar'
 import TrackPreview from '../components/TrackPreview';
 import ArtistPreview from '../components/ArtistPreview';
 import ScrollAnimation from 'react-animate-on-scroll'
+import {bounce, fadeInRight} from 'react-animations';
 import { Link, useHistory } from "react-router-dom";
 import "../styles/Home.css";
 
+const Bounce = styled.div`animation: 2s ${keyframes`${bounce}`}`;
+const FadeInRight = styled.div`animation: 2s ${keyframes`${fadeInRight}`}`;
 
 //axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
 axios.defaults.baseURL = "http://localhost:8888";
@@ -134,6 +138,7 @@ class Home extends Component {
                 "accessToken": this.state.accessToken,  
             }
         }).then((res) => {
+            console.log(res.data.items);
             this.setState({
                 topArtists: res.data.items
             })
@@ -198,37 +203,29 @@ class Home extends Component {
                         {/* <img className="profile" src={this.state.image} /> */}
                         <h1>{this.state.name}</h1>
                     </div>
-                    <div>
-                        {this.state.isPlaying ?
-                            <TrackPreview 
-                                name={this.state.currenlyPlaying.name} 
-                                album_img={this.state.currenlyPlaying.album_img}
-                                artists={this.state.currenlyPlaying.artists}
-                                link={this.state.currenlyPlaying.link}
-                            /> :
-                            null
-                        }
-                    </div>  
+                    
                 </div>
                     
                 {/* Top Tracks Note: Currently Short Term */}
                 <div className="tracksContainer">
                     <div className="tracksTitle">
-                        <h1>Current Bumps</h1>
+                        <Bounce>
+                            <h1>Current Bumps</h1>
+                        </Bounce>
                     </div>
                     
                     <div className="tracksContent">
-                        <ul>
-                            {this.state.topTracks.map(listitem => (
-                                <TrackPreview 
-                                    key={listitem.id} 
-                                    name={listitem.name} 
-                                    artists={listitem.artists}
-                                    album_img={listitem.album.images[0].url}
-                                    link={listitem.external_urls.spotify}
-                                />
-                            ))}
-                        </ul>
+                            <ul>
+                                {this.state.topTracks.map(listitem => (
+                                    <TrackPreview 
+                                        key={listitem.id} 
+                                        name={listitem.name} 
+                                        artists={listitem.artists}
+                                        album_img={listitem.album.images[0].url}
+                                        link={listitem.external_urls.spotify}
+                                    />
+                                ))}
+                            </ul>
                     </div>
                 </div>
                 
@@ -239,8 +236,8 @@ class Home extends Component {
                     
                     <div className="artistsContent">
                         <ul>
-                            {this.state.topArtists.map(listitem => (
-                                <ArtistPreview key={listitem.id} name={listitem.name} img={listitem.images[0].url}/>
+                            {this.state.topArtists.map(artist => (
+                                <ArtistPreview key={artist.id} name={artist.name} img={artist.images[0].url} link={artist.external_urls.spotify}/>
                             ))}
                         </ul>
                     </div>
@@ -249,7 +246,19 @@ class Home extends Component {
                         <h1>My Top Artists</h1>
                     </div>  
 
-                </div>                  
+                </div>       
+
+                <div>
+                    {this.state.isPlaying ?
+                        <TrackPreview 
+                            name={this.state.currenlyPlaying.name} 
+                            album_img={this.state.currenlyPlaying.album_img}
+                            artists={this.state.currenlyPlaying.artists}
+                            link={this.state.currenlyPlaying.link}
+                        /> :
+                        null
+                    }
+                </div>             
                             
                 <div className="buttonContainer">
                     <Link to="/Directory">

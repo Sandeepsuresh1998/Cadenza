@@ -3,6 +3,7 @@ import queryString from 'query-string';
 import axios from 'axios'
 import TrackPreview from '../components/TrackPreview';
 import "../styles/Shared.css";
+import "../styles/Universal.css";
 import ArtistPreview from '../components/ArtistPreview';
 
 class Shared extends Component {

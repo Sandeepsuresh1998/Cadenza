@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import styled, { keyframes } from 'styled-components';
 import {fadeInLeft} from 'react-animations';
+import Typing from 'react-typing-animation';
 import '../styles/Landing.css'; //CSS 
 import axios from 'axios';
 
@@ -20,10 +21,11 @@ class Landing extends Component {
     render() {
         return (
             <div className="LoginPage">
-                <FadeInLeft>
-                    <h1 className="header">Music Taste</h1>
-                    <button onClick={this.handleClick} className="loginButton">Login</button>
-                </FadeInLeft>
+                <h1 className="header">Music Taste</h1>
+                <Typing>
+                    <h3 className="description">Compare your music taste with your friends</h3>
+                </Typing>
+                <button onClick={this.handleClick} className="loginButton">Login</button>
             </div>
         )
     }

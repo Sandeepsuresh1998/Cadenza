@@ -482,17 +482,19 @@ app.get('/computeSharedTopArtists', (req, res, next) => {
           //Make id for friendship
           const friendshipInfo = helper.getFriendshipToken(myUserId, otherUserId);
           //Write to db
-          data = {
+          db.collection("Comparisons").doc(friendshipInfo.friendshipToken).update({
             'firstId': friendshipInfo.firstId, 
             'secondId': friendshipInfo.secondId,
             'artistGenerationTime': firestore.Timestamp.now(),
             'sharedArtists': artistResponse
-          }
-          db.collection("Comparisons").doc(friendshipInfo.friendshipToken).update({
-            ...data
           }).catch(error => {
             console.log("Couldn't find document");
-            db.collection("Comparisons").doc(friendshipInfo.friendshipToken).set({...data})
+            db.collection("Comparisons").doc(friendshipInfo.friendshipToken).set({
+              'firstId': friendshipInfo.firstId, 
+              'secondId': friendshipInfo.secondId,
+              'artistGenerationTime': firestore.Timestamp.now(),
+              'sharedArtists': artistResponse
+            })
           });
           
           return res.send("Finished computing shared artists").status(200);
