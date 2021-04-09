@@ -194,10 +194,8 @@ class Home extends Component {
     render() {
         return (
             <div className="root">
-                {/* This is some navbar code I'll come back to */}
                 
                 <div className="headerContainer">
-                    {/* <h1 style={{color: "#1DB954"}} className="header">Sounds</h1> */}
                     {/* Personal Info */}
                     <div className="info">
                         {/* <img className="profile" src={this.state.image} /> */}

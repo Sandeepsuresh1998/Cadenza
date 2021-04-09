@@ -14,19 +14,3 @@
 .profilePics img {
     margin: 10px;
 }
-
-.banner  {
-    font-size: 7vw;
-    color: #1DB954;
-}
-
-.artists {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-}
-
-.tracks {
-    display: flex;
-    flex-direction: row;
-}

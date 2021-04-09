@@ -6,7 +6,7 @@
 }
 
 .artist-container h1 {
-    font-size: 30px;
+    font-size: 50px;
     padding-left: 25px;
 }
 
@@ -19,4 +19,10 @@ a {
 
 a:hover h1 {
     color: #1DB954;
+}
+
+ul {
+    color: white;
+    overflow-y: scroll;
+    height: 100vh;
 }

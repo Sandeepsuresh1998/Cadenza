@@ -1,34 +1,38 @@
-
+.root {
+    display: flex;
+}
 .tracksContainer {
     display: flex;
-    flex: row;
-    justify-content: center;
-    align-items: center;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-content: center;
     margin-inline: 10%;
 }
-
-/* .tracksTitle {
-    flex: 1 1 auto;
+.tracksTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
-
-.tracksContent {
-    flex: 1 1 auto;
-} */
-
 .tracksTitle h1 {
     font-size: 7vw;
 }
 
 .artistsContainer {
     display: flex;
-    flex: row;
+    flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    padding: 5%;
+    margin-inline: 10%;
+}
+.artistsTitle {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .artistsTitle h1 {
     font-size: 7vw;
+    padding-left: 50px;
 }
 
 .headerContainer {
@@ -76,5 +80,4 @@ h1 {
 ul {
     color: white;
     overflow-y: scroll;
-    height: 100vh;
 }

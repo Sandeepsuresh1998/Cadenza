@@ -3,7 +3,6 @@ import queryString from 'query-string';
 import axios from 'axios'
 import TrackPreview from '../components/TrackPreview';
 import "../styles/Shared.css";
-import "../styles/Universal.css";
 import ArtistPreview from '../components/ArtistPreview';
 
 class Shared extends Component {
@@ -79,9 +78,9 @@ class Shared extends Component {
                 </div>
 
                 
-                <div className="tracks">
-                    <div>
-                        <h1 className="banner">Our Songs</h1>
+                <div className="tracksContainer">
+                    <div className="tracksTitle">
+                        <h1>Current Bumps</h1>
                     </div>
                     <div>
                         <ul>   
@@ -95,13 +94,12 @@ class Shared extends Component {
                                 />
                             ))}
                         </ul>
-                        
                     </div>
                     
                 </div>
 
-                <div className="artists">
-                    <div className="">  
+                <div className="artistsContainer">
+                    <div >  
                         <ul>
                             {this.state.sharedArtists.map(artist => (
                                 <ArtistPreview
@@ -112,8 +110,8 @@ class Shared extends Component {
                             ))}
                         </ul>
                     </div>
-                    <div>
-                        <h1 className="banner">Artists WE Like</h1>
+                    <div className="artistsTitle">
+                        <h1 className="banner">Artists We Share</h1>
                     </div>
                     
                 </div>
