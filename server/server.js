@@ -149,7 +149,7 @@ app.get('/callback', (req, res) =>  {
         // we can also pass the token to the browser to make requests from there
         // specifically we are routing back to the home page
         console.log("Redirecting now");
-        res.redirect('/Home?' +
+        res.redirect('https://musictaste-8ca96.web.app/Home?' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
