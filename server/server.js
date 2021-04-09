@@ -149,7 +149,7 @@ app.get('/callback', (req, res) =>  {
         // we can also pass the token to the browser to make requests from there
         // specifically we are routing back to the home page
         console.log("Redirecting now");
-        res.redirect('http://localhost:3000/home?' +
+        res.redirect('/Home?' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
