@@ -124,7 +124,7 @@ app.get('/callback', (req, res) =>  {
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
           // In case there is no image
-          var url = ""
+          var url = "../musictaste/public/portalplayer.png";
           if(typeof body.images !== 'undefined') {
               url = body.images[0].url 
           }
@@ -140,8 +140,7 @@ app.get('/callback', (req, res) =>  {
           }
 
           // Creating a user in the db
-          // Doesn't seem to add duplicates
-          // Though i think this is just rewriting everything which is no bueno
+          //TODO: Set vs Update based on whether used exists
           db.collection("Users").doc(body.id).set(userData);
           
         });
@@ -149,11 +148,18 @@ app.get('/callback', (req, res) =>  {
         // we can also pass the token to the browser to make requests from there
         // specifically we are routing back to the home page
         console.log("Redirecting now");
+        res.redirect('https://localhost:3000/Home?' +
+          querystring.stringify({
+            access_token: access_token,
+            refresh_token: refresh_token
+          }));
+        /*  
         res.redirect('https://musictaste-8ca96.web.app/Home?' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
           }));
+        */
       } else {
         res.redirect('/#' +
           querystring.stringify({
@@ -557,6 +563,21 @@ app.get('/getComparisonData', (req, res) => {
   })
 })
 
+app.get('/getNewAccessToken', (req, res) => {
+  //Get user id from query
+  const userId = req.query.userId;
+  db.collection("Users").doc(userId).get().then(doc => {
+    if(!doc.exists) {
+      return res.send("Unable to find user").status(500);
+    } 
+
+    console.log(doc.data())
+    //If token is >30 min old, get new one
+    const last_login = doc.data().last_login;
+    const now = firestore.Timestamp.now();
+    console.log(now - last_login);
+  });
+})
 
 console.log("Listening on 8888")
 app.listen(process.env.PORT || 8888);
