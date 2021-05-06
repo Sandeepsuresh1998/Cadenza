@@ -67,6 +67,12 @@
     color: white;
 }
 
+.directoryButton:focus {
+    outline: none;
+}
+
+
+
 .profile {
     height: 200px;
     width: 200px;
@@ -80,4 +86,5 @@ h1 {
 ul {
     color: white;
     overflow-y: scroll;
+    display: inline-block;
 }

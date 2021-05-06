@@ -30,3 +30,7 @@
 .loginButton:hover {
     background-color: white;
 }
+
+.loginButton:focus {
+    outline: none;
+}

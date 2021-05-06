@@ -13,8 +13,8 @@ import "../styles/Home.css";
 const Bounce = styled.div`animation: 2s ${keyframes`${bounce}`}`;
 const FadeInRight = styled.div`animation: 2s ${keyframes`${fadeInRight}`}`;
 
-axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
-//axios.defaults.baseURL = "http://localhost:8888";
+//axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
+axios.defaults.baseURL = "http://localhost:8888";
 
 
 
@@ -34,10 +34,9 @@ class Home extends Component {
             isPlaying: false, 
             currenlyPlaying: {}, 
         }
-        this.topArtists = this.topArtists.bind(this);
         this.getPlaylists = this.getPlaylists.bind(this);
         this.getTopTracks = this.getTopTracks.bind(this);
-        this.getMyInfo = this.getMyInfo.bind(this);
+        this.getPersonalInfo = this.getPersonalInfo.bind(this);
         this.getTopArtists = this.getTopArtists.bind(this);
         this.getNowPlaying = this.getNowPlaying.bind(this);
         this.handleButtonClick = this.handleButtonClick.bind(this);
@@ -45,6 +44,11 @@ class Home extends Component {
 
     componentDidMount() {
         // Parse Access Token
+        axios.get('/getNewAccessToken', {
+            params: {
+                "userId": 1223546560    
+            }
+        })
         let parsed = queryString.parse(window.location.search);
         this.setState({
             accessToken: parsed.access_token,
@@ -53,7 +57,7 @@ class Home extends Component {
             //Functions to call after accessToken and refreshToken have been set
 
             //Get personal info
-            this.getMyInfo();
+            this.getPersonalInfo();
 
             //Set top tracks 
             this.getTopTracks();
@@ -64,9 +68,6 @@ class Home extends Component {
             this.getNowPlaying();
             
         });
-
-        // Get user info
-        // TODO: Make this more expansive and add more details to page
         
     }
 
@@ -104,7 +105,7 @@ class Home extends Component {
 
 
     //Get basic user info 
-    getMyInfo() {
+    getPersonalInfo() {
         console.log("Fetching my information");
         axios.get('/myInfo', {
             params: {
@@ -127,23 +128,6 @@ class Home extends Component {
             }
         })
     }   
-
-
-    // Get info
-    // TODO: Change to get top artists and tracks
-    topArtists() {
-        console.log(this.state.accessToken);
-        axios.get('/getTopArtists', {
-            params: {
-                "accessToken": this.state.accessToken,  
-            }
-        }).then((res) => {
-            console.log(res.data.items);
-            this.setState({
-                topArtists: res.data.items
-            })
-        })
-    }
 
 
     // Get a user's playlist
@@ -174,8 +158,7 @@ class Home extends Component {
             })
         })
     }
-
-    // TODO: Component did mount call
+    
     // TODO: Error checking on response
     getTopTracks() {
         axios.get('/getTopTracks', {
