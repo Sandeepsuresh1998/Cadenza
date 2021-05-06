@@ -60,8 +60,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get('/login', (req, res) =>  {
 
-  console.log('Hit login')
-
+  console.log("Logging in a user");
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
@@ -113,6 +112,8 @@ app.get('/callback', (req, res) =>  {
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
 
+        var userId;
+
         // TODO: If user exists, run suite of information grabs.
 
         var options = {
@@ -122,7 +123,7 @@ app.get('/callback', (req, res) =>  {
         };
 
         // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
+        userId = request.get(options, function(error, response, body) {
           // In case there is no image
           var url = "../musictaste/public/portalplayer.png";
           if(typeof body.images !== 'undefined') {
@@ -142,17 +143,22 @@ app.get('/callback', (req, res) =>  {
           // Creating a user in the db
           //TODO: Set vs Update based on whether used exists
           db.collection("Users").doc(body.id).set(userData);
-          
-        });
 
-        // we can also pass the token to the browser to make requests from there
-        // specifically we are routing back to the home page
-        console.log("Redirecting now");
-        res.redirect('https://musictaste-8ca96.web.app/Home?' +
-          querystring.stringify({
-            access_token: access_token,
-            refresh_token: refresh_token
-          }));
+
+          // we can also pass the token to the browser to make requests from there
+          // specifically we are routing back to the home page
+          //dev
+          res.redirect('http://localhost:3000/Home?' +
+            querystring.stringify({
+              listener: body.id
+            }));
+          // res.redirect('https://musictaste-8ca96.web.app/Home?' +
+          //   querystring.stringify({
+          //     access_token: access_token,
+          //     refresh_token: refresh_token
+          //   }));
+        });
+         
       } else {
         res.redirect('/#' +
           querystring.stringify({

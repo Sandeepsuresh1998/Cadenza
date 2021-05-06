@@ -44,30 +44,34 @@ class Home extends Component {
 
     componentDidMount() {
         // Parse Access Token
-        axios.get('/getNewAccessToken', {
-            params: {
-                "userId": 1223546560    
-            }
-        })
         let parsed = queryString.parse(window.location.search);
-        this.setState({
-            accessToken: parsed.access_token,
-            refreshToken: parsed.refresh_token
-        }, () => {
-            //Functions to call after accessToken and refreshToken have been set
+        axios.get('/getUserFromDb', {
+            params: {
+                "userId": parsed.listener    
+            }
+        }).then(user => {
+            const userData = user.data;
+            this.setState({
+                accessToken: userData.access_token,
+                refreshToken: userData.refresh_token
+            }, () => {
+                //Functions to call after accessToken and refreshToken have been set
+    
+                //Get personal info
+                this.getPersonalInfo();
+    
+                //Set top tracks 
+                this.getTopTracks();
+    
+                //Set Top Artists
+                this.getTopArtists();
+    
+                this.getNowPlaying();
+                
+            });
+        })
 
-            //Get personal info
-            this.getPersonalInfo();
-
-            //Set top tracks 
-            this.getTopTracks();
-
-            //Set Top Artists
-            this.getTopArtists();
-
-            this.getNowPlaying();
-            
-        });
+        
         
     }
 
