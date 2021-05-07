@@ -44,7 +44,6 @@ async function getNewAccessToken(refreshToken) {
         }
     }).then(response => {
         console.log(response.data);
-        // TODO: Update db
         return response.data.access_token
     }).catch(err => {
         console.log(err.message);

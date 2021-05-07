@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import ProfilePreview from '../components/ProfilePreview'
-import {Link} from 'react-router-dom';
-import '../styles/Directory.css'
+import '../styles/Directory.css';
+import { Link, useHistory } from "react-router-dom";
+import querystring from 'querystring';
 
 class Directory extends Component {
     constructor(props) {
@@ -27,7 +28,7 @@ class Directory extends Component {
         })
     }
 
-    handleProfileClick = (userId) => {
+    handleCompareClick = (userId) => {
         // Dirty way of circumventing cors
         // TODO: Research better way to redirect
         // TODO: Call shared top artists too
@@ -54,6 +55,12 @@ class Directory extends Component {
         })
     }
 
+    handleProfileClick = (userId) => {
+        window.location.href = "/Home?" + querystring.stringify({
+            listener: userId
+        })
+    }
+
     render() {
         return (
             <div className="root">
@@ -61,9 +68,15 @@ class Directory extends Component {
                 <div className="listContainer"> 
                     <ul>
                             {this.state.users.map(user => (
-                                <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
-                                    <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
-                                </button>
+                                <div>
+                                    <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
+                                        <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
+                                    </button>
+                                    <button key={user.userId} id={user.userId} onClick={e => this.handleCompareClick(e.target.id)}> 
+                                        Compare
+                                    </button>
+                                </div>
+                                
                             ))}    
                     </ul>
                 </div>

@@ -263,15 +263,32 @@ app.get('/getPlaylists', (req, res) => {
 
 app.get('/getUserFromDb', (req, res) => {
   const userId = req.query.userId;
-  db.collection("Users").doc(userId).get().then(doc => {
-    if(!doc.exists) {
-      return res.send("Unable to find user").status(500);
-    } 
 
-    console.log(doc.data())
-    return res.send(doc.data()).status(200);
-  })
-})
+  /*
+      Usually this would be called first in the app, so we 
+      should update the access tokens here. Eventually, 
+      should add logic to check timestamp, but worked around now
+  */
+ db.collection("Users").doc(userId).get().then(user => {
+   helper.getNewAccessToken(user.data().refresh_token).then(token => {
+      //Update access token in db
+      console.log("Updating access token");
+      let data = {
+        'access_token': token
+      }
+      db.collection("Users").doc(userId).update({
+        ...data
+      }).then(doc => {
+        db.collection("Users").doc(userId).get().then(doc => {
+          if(!doc.exists) {
+            return res.send("Unable to find user").status(500);
+          } 
+          return res.send(doc.data()).status(200);
+        });
+      });
+    });
+  });
+ })
 
 
 //FUNCTION: Get top currently playing song
@@ -562,6 +579,7 @@ app.get('/getComparisonData', (req, res) => {
   })
 })
 
+//Might not need
 app.get('/getNewAccessToken', (req, res) => {
   //Get user id from query
   const userId = req.query.userId;

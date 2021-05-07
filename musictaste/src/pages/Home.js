@@ -129,6 +129,8 @@ class Home extends Component {
                         image: info.images[0].url,
                     })
                 }
+            } else {
+                console.log("Error in getting my info");
             }
         })
     }   
