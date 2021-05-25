@@ -22,33 +22,28 @@ class Directory extends Component {
         //Make axios call to back end and get all the users
         // NOTE: Might not need all information from the db
         //       so might be worth it to do some trimming here
-        axios.get('/getAllUsers').then((res) => {
+        axios.get('/getAllUsers').then((res) => {  
+            //Filter out current user
+            const users = res.data.filter(user => user.userId != this.props.user.userId);
             this.setState({
-                users: res.data
+                users: users
             })
         })
-
-        console.log(this.props.user);
-
     }
 
     handleCompareClick = (userId) => {
-        // Dirty way of circumventing cors
-        // TODO: Research better way to redirect
-        // TODO: Call shared top artists too
         const ids = {
             'me': 1223546560, 
             'other': userId
         }
-
         axios.get('/computeSharedTopArtists', {params: ids}).then(res => {
             console.log(res);
             axios.get('computeSharedTopTracks', {params: ids}).then(res => {
                 console.log(res);
                 const friendshipToken = res.data.friendshipInfo.friendshipToken;
+                // TODO: Research better way to redirect
                 const url = `/Shared?friendshipToken=${friendshipToken}`
                 window.location.href = url;
-
             }).catch(err => {
                 console.log("Something went wrong in computing top tracks");
                 console.log(err);
@@ -77,11 +72,7 @@ class Directory extends Component {
                                         <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
                                             <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
                                         </button>
-                                        <button key={user.userId} id={user.userId} onClick={e => this.handleCompareClick(e.target.id)}> 
-                                            Compare
-                                        </button>
-                                    </div>
-                                    
+                                    </div>                               
                                 )
                             )}    
                     </ul>

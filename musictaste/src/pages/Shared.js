@@ -81,7 +81,7 @@ class Shared extends Component {
                 
                 <div className="tracksContainer">
                     <div className="tracksTitle">
-                        <h1>Current Bumps</h1>
+                        <h1>Tracks we Share</h1>
                     </div>
                     <div>
                         <ul>   

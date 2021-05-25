@@ -30,7 +30,7 @@ class Home extends Component {
             topTracks: [],
             topArtists: [], 
             name: '',
-            userID: '',
+            userId: '',
             image: '',
             isPlaying: false, 
             currenlyPlaying: {}, 
@@ -126,7 +126,7 @@ class Home extends Component {
                 const info = res.data.body;
                 this.setState({
                     name: info.display_name, 
-                    userID: info.id
+                    userId: info.id
                 })
                 if(info.images) {
                     //Set the image url if there is one
@@ -185,6 +185,29 @@ class Home extends Component {
         })
     }
 
+    handleCompareClick = (userId) => {
+        const ids = {
+            'me' : this.props.user.userId,
+            'other': userId
+        }
+        axios.get('/computeSharedTopArtists', {params: ids}).then(res => {
+            console.log(res);
+            axios.get('computeSharedTopTracks', {params: ids}).then(res => {
+                console.log(res);
+                const friendshipToken = res.data.friendshipInfo.friendshipToken;
+                // TODO: Research better way to redirect
+                const url = `/Shared?friendshipToken=${friendshipToken}`
+                window.location.href = url;
+            }).catch(err => {
+                console.log("Something went wrong in computing top tracks");
+                console.log(err);
+            })
+        }).catch(err => {
+            console.log("Something went wrong in computing artists");
+            console.log(err);
+        })
+    }
+
     render() {
         return (
             <div className="root">
@@ -194,6 +217,15 @@ class Home extends Component {
                     <div className="info">
                         {/* <img className="profile" src={this.state.image} /> */}
                         <h1>{this.state.name}</h1>
+                        {this.state.userId != this.props.user.userId ? 
+                            <button 
+                                id={this.state.userId}
+                                onClick={e => this.handleCompareClick(e.target.id)}>
+                                Compare with Me
+                            </button>
+                            :
+                            ""    
+                        }
                     </div>
                     
                 </div>
