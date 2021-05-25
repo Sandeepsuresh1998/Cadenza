@@ -8,6 +8,7 @@ import allReducers from './reducers'; //Note will default look up to index.js
 import {Provider} from 'react-redux';
 import {persistStore} from 'redux-persist'
 import {PersistGate} from 'redux-persist/integration/react';
+import ReactLoading from 'react-loading';
 
 const store = createStore(
   allReducers,
@@ -20,7 +21,9 @@ const persistor = persistStore(store);
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <PersistGate persistor={persistor}> 
+      <PersistGate 
+        loading={<ReactLoading type="bars" color="#F8F8FF" height={667} width={375}/>}
+        persistor={persistor}> 
         <App />
       </PersistGate>
     </Provider>

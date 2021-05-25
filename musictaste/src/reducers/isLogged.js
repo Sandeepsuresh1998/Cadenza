@@ -7,8 +7,11 @@ const loggedReducer = (state = initialState, action) => {
                 isLogged: true,
                 user: action.payload,
             }
-            break;
         case 'SIGN_IN_ERROR' :
+            return {
+                isLogged: false
+            }
+        case 'LOGOUT' :
             return {
                 isLogged: false
             }

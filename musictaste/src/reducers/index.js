@@ -10,8 +10,8 @@ const persistConfig = {
     whitelist: ['auth']
 }
 
-const rootReducer = combineReducers({
+const allReducers = combineReducers({
     auth: loggedReducer
 })
 
-export default persistReducer(persistConfig, rootReducer);
+export default persistReducer(persistConfig, allReducers);

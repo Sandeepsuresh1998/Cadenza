@@ -9,7 +9,7 @@ import ScrollAnimation from 'react-animate-on-scroll'
 import {bounce, fadeInRight} from 'react-animations';
 import { Link, useHistory } from "react-router-dom";
 import {connect} from 'react-redux';
-import {login} from '../actions/userActions';
+import {login, logout} from '../actions/userActions';
 import "../styles/Home.css";
 
 const Bounce = styled.div`animation: 2s ${keyframes`${bounce}`}`;
@@ -52,7 +52,6 @@ class Home extends Component {
         }).then(user => {
             //Dispatch action to set logged in and user data
             const userData = user.data;
-            console.log(this.props.isLogged);
             if(this.props.isLogged != true) {
                 this.props.login(userData);
             }
@@ -61,7 +60,6 @@ class Home extends Component {
                 refreshToken: userData.refresh_token
             }, () => {
 
-                console.log(this.props);
                 //Functions to call after accessToken and refreshToken have been set
     
                 //Get personal info
@@ -208,6 +206,10 @@ class Home extends Component {
         })
     }
 
+    handleLogoutClick = () => {
+        this.props.logout();
+    }
+
     render() {
         return (
             <div className="root">
@@ -228,6 +230,12 @@ class Home extends Component {
                         }
                     </div>
                     
+                </div>
+
+                <div>
+                    <Link to="/" onClick={this.handleLogoutClick}>
+                        <h1>Logout</h1>
+                    </Link>
                 </div>
                     
                 {/* Top Tracks Note: Currently Short Term */}
@@ -298,13 +306,14 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-    isLogged: state.auth.isLogged,
-    user: state.auth.user
+    isLogged: state.auth.isLogged || false,
+    user: state.auth.user || {userId: 0}
 });
 
 const mapDispatchToProps = () => {
     return {
-      login
+      login,
+      logout
     };
   };
 export default connect(
