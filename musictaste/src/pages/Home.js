@@ -8,7 +8,7 @@ import ArtistPreview from '../components/ArtistPreview';
 import ScrollAnimation from 'react-animate-on-scroll'
 import {bounce, fadeInRight} from 'react-animations';
 import { Link, useHistory } from "react-router-dom";
-import {useSelector, useDispatch, connect} from 'react-redux';
+import {connect} from 'react-redux';
 import {login} from '../actions/userActions';
 import "../styles/Home.css";
 
@@ -30,7 +30,6 @@ class Home extends Component {
             topTracks: [],
             topArtists: [], 
             name: '',
-            email: '', 
             userID: '',
             image: '',
             isPlaying: false, 
@@ -124,7 +123,6 @@ class Home extends Component {
                 const info = res.data.body;
                 this.setState({
                     name: info.display_name, 
-                    email: info.email,
                     userID: info.id
                 })
                 if(info.images) {

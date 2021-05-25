@@ -4,6 +4,7 @@ import ProfilePreview from '../components/ProfilePreview'
 import '../styles/Directory.css';
 import { Link, useHistory } from "react-router-dom";
 import querystring from 'querystring';
+import {connect} from 'react-redux';
 
 class Directory extends Component {
     constructor(props) {
@@ -26,6 +27,9 @@ class Directory extends Component {
                 users: res.data
             })
         })
+
+        console.log(this.props.user);
+
     }
 
     handleCompareClick = (userId) => {
@@ -67,17 +71,19 @@ class Directory extends Component {
                 <h1>Directory</h1>
                 <div className="listContainer"> 
                     <ul>
-                            {this.state.users.map(user => (
-                                <div>
-                                    <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
-                                        <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
-                                    </button>
-                                    <button key={user.userId} id={user.userId} onClick={e => this.handleCompareClick(e.target.id)}> 
-                                        Compare
-                                    </button>
-                                </div>
-                                
-                            ))}    
+                            {this.state.users.map(user => 
+                                (
+                                    <div>
+                                        <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
+                                            <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
+                                        </button>
+                                        <button key={user.userId} id={user.userId} onClick={e => this.handleCompareClick(e.target.id)}> 
+                                            Compare
+                                        </button>
+                                    </div>
+                                    
+                                )
+                            )}    
                     </ul>
                 </div>
             </div>
@@ -86,4 +92,11 @@ class Directory extends Component {
     }
 }
 
-export default Directory
+const mapStateToProps = state => ({
+    isLogged: state.auth.isLogged,
+    user: state.auth.user
+});
+
+export default connect(
+    mapStateToProps,
+)(Directory);

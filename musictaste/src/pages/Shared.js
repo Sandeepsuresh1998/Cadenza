@@ -4,6 +4,7 @@ import axios from 'axios'
 import TrackPreview from '../components/TrackPreview';
 import "../styles/Shared.css";
 import ArtistPreview from '../components/ArtistPreview';
+import {connect} from 'react-redux';
 
 class Shared extends Component {
     constructor(props) {
@@ -120,4 +121,11 @@ class Shared extends Component {
     }
 }
 
-export default Shared
+const mapStateToProps = state => ({
+    isLogged: state.auth.isLogged,
+    user: state.auth.user
+});
+
+export default connect(
+    mapStateToProps,
+)(Shared);
