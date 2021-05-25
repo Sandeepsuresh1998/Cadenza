@@ -52,7 +52,10 @@ class Home extends Component {
         }).then(user => {
             //Dispatch action to set logged in and user data
             const userData = user.data;
-            this.props.login(userData);
+            console.log(this.props.isLogged);
+            if(this.props.isLogged != true) {
+                this.props.login(userData);
+            }
             this.setState({
                 accessToken: userData.access_token,
                 refreshToken: userData.refresh_token
