@@ -210,9 +210,17 @@ class Home extends Component {
         this.props.logout();
     }
 
+    componentWillUnmount = () => {
+        
+    }
+
     render() {
         return (
             <div className="root">
+
+                <div className="nav">
+
+                </div>
                 
                 <div className="headerContainer">
                     {/* Personal Info */}
