@@ -8,6 +8,8 @@ import ArtistPreview from '../components/ArtistPreview';
 import ScrollAnimation from 'react-animate-on-scroll'
 import {bounce, fadeInRight} from 'react-animations';
 import { Link, useHistory } from "react-router-dom";
+import {useSelector, useDispatch, connect} from 'react-redux';
+import {login} from '../actions/userActions';
 import "../styles/Home.css";
 
 const Bounce = styled.div`animation: 2s ${keyframes`${bounce}`}`;
@@ -44,16 +46,20 @@ class Home extends Component {
     componentDidMount() {
         // Parse Access Token
         let parsed = queryString.parse(window.location.search);
-        axios.get(' FromDb', {
+        axios.get('getUserFromDb', {
             params: {
                 "userId": parsed.listener    
             }
         }).then(user => {
+            //Dispatch action to set logged in and user data
             const userData = user.data;
+            this.props.login(userData);
             this.setState({
                 accessToken: userData.access_token,
                 refreshToken: userData.refresh_token
             }, () => {
+
+                console.log(this.props);
                 //Functions to call after accessToken and refreshToken have been set
     
                 //Get personal info
@@ -68,12 +74,15 @@ class Home extends Component {
                 this.getNowPlaying();
                 
             });
+        }).catch(err => {
+            //Catch some error with the home page and redirect to login
+            console.log(err);
         })
 
         
         
     }
-        
+
     // Currently Playing Track
     getNowPlaying() {
         axios.get('/getNowPlaying', {
@@ -250,18 +259,22 @@ class Home extends Component {
                     </Link>
                 </div>
 
-                <div>
-                    {/* Need logic to determine if we are on our own page */}
-                    <Link to="/Shared">
-                        <button className>
-                            Compare with You
-                        </button>
-                    </Link>
-                </div>
-
             </div>
         ) 
     }
 }
 
-export default Home;
+const mapStateToProps = state => ({
+    isLogged: state.auth.isLogged,
+    user: state.auth.user
+});
+
+const mapDispatchToProps = () => {
+    return {
+      login
+    };
+  };
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps()
+)(Home);
