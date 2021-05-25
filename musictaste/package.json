@@ -15,9 +15,11 @@
     "react-bootstrap": "^1.5.2",
     "react-bootstrap-buttons": "^1.0.0",
     "react-dom": "^16.13.1",
+    "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "3.4.1",
+    "react-scripts": "^4.0.3",
     "react-typing-animation": "^1.6.2",
+    "redux": "^4.1.0",
     "spotify-web-api-js": "^1.4.0",
     "styled-components": "^5.1.1"
   },

@@ -39,13 +39,12 @@ class Home extends Component {
         this.getPersonalInfo = this.getPersonalInfo.bind(this);
         this.getTopArtists = this.getTopArtists.bind(this);
         this.getNowPlaying = this.getNowPlaying.bind(this);
-        this.handleButtonClick = this.handleButtonClick.bind(this);
     }
 
     componentDidMount() {
         // Parse Access Token
         let parsed = queryString.parse(window.location.search);
-        axios.get('/getUserFromDb', {
+        axios.get(' FromDb', {
             params: {
                 "userId": parsed.listener    
             }
@@ -74,11 +73,7 @@ class Home extends Component {
         
         
     }
-
-    handleButtonClick() {
-        this.history.location.push("/Directory")
-    }
-
+        
     // Currently Playing Track
     getNowPlaying() {
         axios.get('/getNowPlaying', {
@@ -253,7 +248,15 @@ class Home extends Component {
                             Find Friends
                         </button>
                     </Link>
-                    
+                </div>
+
+                <div>
+                    {/* Need logic to determine if we are on our own page */}
+                    <Link to="/Shared">
+                        <button className>
+                            Compare with You
+                        </button>
+                    </Link>
                 </div>
 
             </div>
