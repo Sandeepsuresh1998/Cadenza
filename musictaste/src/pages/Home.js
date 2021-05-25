@@ -8,6 +8,8 @@ import ArtistPreview from '../components/ArtistPreview';
 import ScrollAnimation from 'react-animate-on-scroll'
 import {bounce, fadeInRight} from 'react-animations';
 import { Link, useHistory } from "react-router-dom";
+import {connect} from 'react-redux';
+import {login} from '../actions/userActions';
 import "../styles/Home.css";
 
 const Bounce = styled.div`animation: 2s ${keyframes`${bounce}`}`;
@@ -28,8 +30,7 @@ class Home extends Component {
             topTracks: [],
             topArtists: [], 
             name: '',
-            email: '', 
-            userID: '',
+            userId: '',
             image: '',
             isPlaying: false, 
             currenlyPlaying: {}, 
@@ -39,22 +40,28 @@ class Home extends Component {
         this.getPersonalInfo = this.getPersonalInfo.bind(this);
         this.getTopArtists = this.getTopArtists.bind(this);
         this.getNowPlaying = this.getNowPlaying.bind(this);
-        this.handleButtonClick = this.handleButtonClick.bind(this);
     }
 
     componentDidMount() {
         // Parse Access Token
         let parsed = queryString.parse(window.location.search);
-        axios.get('/getUserFromDb', {
+        axios.get('getUserFromDb', {
             params: {
                 "userId": parsed.listener    
             }
         }).then(user => {
+            //Dispatch action to set logged in and user data
             const userData = user.data;
+            console.log(this.props.isLogged);
+            if(this.props.isLogged != true) {
+                this.props.login(userData);
+            }
             this.setState({
                 accessToken: userData.access_token,
                 refreshToken: userData.refresh_token
             }, () => {
+
+                console.log(this.props);
                 //Functions to call after accessToken and refreshToken have been set
     
                 //Get personal info
@@ -69,14 +76,13 @@ class Home extends Component {
                 this.getNowPlaying();
                 
             });
+        }).catch(err => {
+            //Catch some error with the home page and redirect to login
+            console.log(err);
         })
 
         
         
-    }
-
-    handleButtonClick() {
-        this.history.location.push("/Directory")
     }
 
     // Currently Playing Track
@@ -120,8 +126,7 @@ class Home extends Component {
                 const info = res.data.body;
                 this.setState({
                     name: info.display_name, 
-                    email: info.email,
-                    userID: info.id
+                    userId: info.id
                 })
                 if(info.images) {
                     //Set the image url if there is one
@@ -180,6 +185,29 @@ class Home extends Component {
         })
     }
 
+    handleCompareClick = (userId) => {
+        const ids = {
+            'me' : this.props.user.userId,
+            'other': userId
+        }
+        axios.get('/computeSharedTopArtists', {params: ids}).then(res => {
+            console.log(res);
+            axios.get('computeSharedTopTracks', {params: ids}).then(res => {
+                console.log(res);
+                const friendshipToken = res.data.friendshipInfo.friendshipToken;
+                // TODO: Research better way to redirect
+                const url = `/Shared?friendshipToken=${friendshipToken}`
+                window.location.href = url;
+            }).catch(err => {
+                console.log("Something went wrong in computing top tracks");
+                console.log(err);
+            })
+        }).catch(err => {
+            console.log("Something went wrong in computing artists");
+            console.log(err);
+        })
+    }
+
     render() {
         return (
             <div className="root">
@@ -189,6 +217,15 @@ class Home extends Component {
                     <div className="info">
                         {/* <img className="profile" src={this.state.image} /> */}
                         <h1>{this.state.name}</h1>
+                        {this.state.userId != this.props.user.userId ? 
+                            <button 
+                                id={this.state.userId}
+                                onClick={e => this.handleCompareClick(e.target.id)}>
+                                Compare with Me
+                            </button>
+                            :
+                            ""    
+                        }
                     </div>
                     
                 </div>
@@ -253,7 +290,6 @@ class Home extends Component {
                             Find Friends
                         </button>
                     </Link>
-                    
                 </div>
 
             </div>
@@ -261,4 +297,17 @@ class Home extends Component {
     }
 }
 
-export default Home;
+const mapStateToProps = state => ({
+    isLogged: state.auth.isLogged,
+    user: state.auth.user
+});
+
+const mapDispatchToProps = () => {
+    return {
+      login
+    };
+  };
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps()
+)(Home);

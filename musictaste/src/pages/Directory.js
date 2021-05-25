@@ -4,6 +4,7 @@ import ProfilePreview from '../components/ProfilePreview'
 import '../styles/Directory.css';
 import { Link, useHistory } from "react-router-dom";
 import querystring from 'querystring';
+import {connect} from 'react-redux';
 
 class Directory extends Component {
     constructor(props) {
@@ -21,30 +22,28 @@ class Directory extends Component {
         //Make axios call to back end and get all the users
         // NOTE: Might not need all information from the db
         //       so might be worth it to do some trimming here
-        axios.get('/getAllUsers').then((res) => {
+        axios.get('/getAllUsers').then((res) => {  
+            //Filter out current user
+            const users = res.data.filter(user => user.userId != this.props.user.userId);
             this.setState({
-                users: res.data
+                users: users
             })
         })
     }
 
     handleCompareClick = (userId) => {
-        // Dirty way of circumventing cors
-        // TODO: Research better way to redirect
-        // TODO: Call shared top artists too
         const ids = {
             'me': 1223546560, 
             'other': userId
         }
-
         axios.get('/computeSharedTopArtists', {params: ids}).then(res => {
             console.log(res);
             axios.get('computeSharedTopTracks', {params: ids}).then(res => {
                 console.log(res);
                 const friendshipToken = res.data.friendshipInfo.friendshipToken;
+                // TODO: Research better way to redirect
                 const url = `/Shared?friendshipToken=${friendshipToken}`
                 window.location.href = url;
-
             }).catch(err => {
                 console.log("Something went wrong in computing top tracks");
                 console.log(err);
@@ -67,17 +66,15 @@ class Directory extends Component {
                 <h1>Directory</h1>
                 <div className="listContainer"> 
                     <ul>
-                            {this.state.users.map(user => (
-                                <div>
-                                    <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
-                                        <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
-                                    </button>
-                                    <button key={user.userId} id={user.userId} onClick={e => this.handleCompareClick(e.target.id)}> 
-                                        Compare
-                                    </button>
-                                </div>
-                                
-                            ))}    
+                            {this.state.users.map(user => 
+                                (
+                                    <div>
+                                        <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
+                                            <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
+                                        </button>
+                                    </div>                               
+                                )
+                            )}    
                     </ul>
                 </div>
             </div>
@@ -86,4 +83,11 @@ class Directory extends Component {
     }
 }
 
-export default Directory
+const mapStateToProps = state => ({
+    isLogged: state.auth.isLogged,
+    user: state.auth.user
+});
+
+export default connect(
+    mapStateToProps,
+)(Directory);
