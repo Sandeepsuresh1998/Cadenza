@@ -148,15 +148,14 @@ app.get('/callback', (req, res) =>  {
           // we can also pass the token to the browser to make requests from there
           // specifically we are routing back to the home page
           //dev
-          res.redirect('http://localhost:3000/Home?' +
-            querystring.stringify({
-              listener: body.id
-            }));
-          // res.redirect('https://musictaste-8ca96.web.app/Home?' +
+          // res.redirect('http://localhost:3000/Home?' +
           //   querystring.stringify({
-          //     access_token: access_token,
-          //     refresh_token: refresh_token
+          //     listener: body.id
           //   }));
+          res.redirect('https://musictaste-8ca96.web.app/Home?' +
+          querystring.stringify({
+            listener: body.id
+          }));
         });
          
       } else {

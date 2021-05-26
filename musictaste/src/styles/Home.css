@@ -6,12 +6,22 @@
     flex-direction: row;
     justify-content: space-evenly;
     align-content: center;
-    margin-inline: 10%;
+    width: 75%;
 }
 .tracksTitle {
     display: flex;
+    width: 50%;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+}
+
+.tracksContent {
+    display: flex;
+    width: 50%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 .tracksTitle h1 {
     font-size: 7vw;
@@ -22,12 +32,21 @@
     flex-direction: row;
     justify-content: space-evenly;
     align-items: center;
-    margin-inline: 10%;
+    width: 75%;
 }
 .artistsTitle {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    width: 50%;
+}
+
+.artistsContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
 }
 
 .artistsTitle h1 {
