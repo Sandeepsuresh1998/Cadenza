@@ -152,7 +152,7 @@ app.get('/callback', (req, res) =>  {
           //   querystring.stringify({
           //     listener: body.id
           //   }));
-          res.redirect('https://musictaste-8ca96.web.app/Home?' +
+          res.redirect('cadenza.me/Home?' +
           querystring.stringify({
             listener: body.id
           }));
