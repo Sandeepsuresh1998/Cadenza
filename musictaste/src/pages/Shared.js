@@ -100,7 +100,7 @@ class Shared extends Component {
                 </div>
 
                 <div className="artistsContainer">
-                    <div >  
+                    <div className="artistsContent">  
                         <ul>
                             {this.state.sharedArtists.map(artist => (
                                 <ArtistPreview
@@ -114,7 +114,6 @@ class Shared extends Component {
                     <div className="artistsTitle">
                         <h1 className="banner">Artists We Share</h1>
                     </div>
-                    
                 </div>
             </div>
         )
