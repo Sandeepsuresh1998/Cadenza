@@ -115,7 +115,6 @@ app.get('/callback', (req, res) =>  {
         var userId;
 
         // TODO: If user exists, run suite of information grabs.
-
         var options = {
           url: 'https://api.spotify.com/v1/me',
           headers: { 'Authorization': 'Bearer ' + access_token },
@@ -125,9 +124,11 @@ app.get('/callback', (req, res) =>  {
         // use the access token to access the Spotify Web API
         userId = request.get(options, function(error, response, body) {
           // In case there is no image
-          var url = "../musictaste/public/portalplayer.png";
-          if(typeof body.images !== 'undefined') {
-              url = body.images[0].url 
+          var url = "";
+          if(typeof body.images[0] === 'undefined') {
+            url = "../musictaste/public/portalplayer.png";
+          } else {
+            url = body.images[0].url;
           }
           
           const userData = {
@@ -143,10 +144,7 @@ app.get('/callback', (req, res) =>  {
           // Creating a user in the db
           //TODO: Set vs Update based on whether used exists
           db.collection("Users").doc(body.id).set(userData);
-
-
-          // we can also pass the token to the browser to make requests from there
-          // specifically we are routing back to the home page
+          
           //dev
           // res.redirect('http://localhost:3000/Home?' +
           //   querystring.stringify({
