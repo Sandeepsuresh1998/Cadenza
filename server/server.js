@@ -152,7 +152,7 @@ app.get('/callback', (req, res) =>  {
           //   querystring.stringify({
           //     listener: body.id
           //   }));
-          res.redirect('cadenza.me/Home?' +
+          res.redirect('https://www.cadenza.me/Home?' +
           querystring.stringify({
             listener: body.id
           }));
