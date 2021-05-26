@@ -24,9 +24,9 @@ class Landing extends Component {
     render() {
         return (
             <div className="LoginPage">
-                <h1 className="header">Music Taste</h1>
+                <h1 className="header">Cadenza</h1>
                 <Typing>
-                    <h3 className="description">Compare your music taste with your friends</h3>
+                    <h3 className="description">Compare (and flex) your music taste with your friends</h3>
                 </Typing>
                 <button onClick={this.handleClick} className="loginButton">Login</button>
             </div>

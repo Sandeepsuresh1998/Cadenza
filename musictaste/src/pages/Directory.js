@@ -5,6 +5,7 @@ import '../styles/Directory.css';
 import { Link, useHistory } from "react-router-dom";
 import querystring from 'querystring';
 import {connect} from 'react-redux';
+import {HouseFill, BoxArrowLeft} from 'react-bootstrap-icons';
 
 class Directory extends Component {
     constructor(props) {
@@ -63,6 +64,14 @@ class Directory extends Component {
     render() {
         return (
             <div className="root">
+                <div className="navContainer">
+                    <Link to={"/Home?listener="+this.props.user.userId}>
+                        <HouseFill color="#F8F8FF"size={35}/>
+                    </Link>
+                    <Link to="/" onClick={this.handleLogoutClick}>
+                        <BoxArrowLeft color="#F8F8FF" size={35}/>
+                    </Link>
+                </div>
                 <h1>Directory</h1>
                 <div className="listContainer"> 
                     <ul>

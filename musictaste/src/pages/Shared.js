@@ -5,6 +5,9 @@ import TrackPreview from '../components/TrackPreview';
 import "../styles/Shared.css";
 import ArtistPreview from '../components/ArtistPreview';
 import {connect} from 'react-redux';
+import {HouseFill, BoxArrowLeft} from 'react-bootstrap-icons';
+import { Link, useHistory } from "react-router-dom";
+
 
 class Shared extends Component {
     constructor(props) {
@@ -67,6 +70,15 @@ class Shared extends Component {
     render() {
         return (
             <div className="root">
+                <div className="navContainer">
+                    <Link to={"/Home?listener="+this.props.user.userId}>
+                        <HouseFill color="#F8F8FF"size={35}/>
+                    </Link>
+                    <Link to="/" onClick={this.handleLogoutClick}>
+                        <BoxArrowLeft color="#F8F8FF" size={35}/>
+                    </Link>
+                </div>
+                
                 <div className="headerContainer">
                     <div className="profileContainer">
                         <div className="profilePics">

@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import queryString from 'query-string';
 import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
-import Navbar from 'react-bootstrap/Navbar'
 import TrackPreview from '../components/TrackPreview';
 import ArtistPreview from '../components/ArtistPreview';
 import ScrollAnimation from 'react-animate-on-scroll'
@@ -10,7 +9,10 @@ import {bounce, fadeInRight} from 'react-animations';
 import { Link, useHistory } from "react-router-dom";
 import {connect} from 'react-redux';
 import {login, logout} from '../actions/userActions';
+import {HouseFill, BoxArrowLeft} from 'react-bootstrap-icons';
 import "../styles/Home.css";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const Bounce = styled.div`animation: 2s ${keyframes`${bounce}`}`;
 const FadeInRight = styled.div`animation: 2s ${keyframes`${fadeInRight}`}`;
@@ -213,9 +215,13 @@ class Home extends Component {
     render() {
         return (
             <div className="root">
-
-                <div className="nav">
-
+                <div className="navContainer">
+                    <Link to={"/Home?listener="+this.props.user.userId}>
+                        <HouseFill color="#F8F8FF"size={35}/>
+                    </Link>
+                    <Link to="/" onClick={this.handleLogoutClick}>
+                        <BoxArrowLeft color="#F8F8FF" size={35}/>
+                    </Link>
                 </div>
                 
                 <div className="headerContainer">
@@ -234,12 +240,6 @@ class Home extends Component {
                         }
                     </div>
                     
-                </div>
-
-                <div>
-                    <Link to="/" onClick={this.handleLogoutClick}>
-                        <h1>Logout</h1>
-                    </Link>
                 </div>
                     
                 {/* Top Tracks Note: Currently Short Term */}
@@ -269,9 +269,6 @@ class Home extends Component {
 
                 {/* Top Artists Note: Short Term */}
                 <div className="artistsContainer">
-                    <div className="artistsTitle">
-                        <h1>My Top Artists</h1>
-                    </div>  
                     <div className="artistsContent">
                         <ul>
                             {this.state.topArtists.map(artist => (
@@ -279,6 +276,9 @@ class Home extends Component {
                             ))}
                         </ul>
                     </div>
+                    <div className="artistsTitle">
+                        <h1>My Top Artists</h1>
+                    </div>  
                 </div>       
 
                 <div>
