@@ -1,6 +1,22 @@
 .root {
     display: flex;
+    background: linear-gradient(-45deg, #ee7752, #be2560, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradient 20s ease infinite;
 }
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
 .tracksContainer {
     display: flex;
     flex-direction: row;
@@ -89,8 +105,6 @@
 .directoryButton:focus {
     outline: none;
 }
-
-
 
 .profile {
     height: 200px;
