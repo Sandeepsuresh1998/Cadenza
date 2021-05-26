@@ -210,10 +210,6 @@ class Home extends Component {
         this.props.logout();
     }
 
-    componentWillUnmount = () => {
-        
-    }
-
     render() {
         return (
             <div className="root">
@@ -273,7 +269,9 @@ class Home extends Component {
 
                 {/* Top Artists Note: Short Term */}
                 <div className="artistsContainer">
-                    
+                    <div className="artistsTitle">
+                        <h1>My Top Artists</h1>
+                    </div>  
                     <div className="artistsContent">
                         <ul>
                             {this.state.topArtists.map(artist => (
@@ -281,11 +279,6 @@ class Home extends Component {
                             ))}
                         </ul>
                     </div>
-
-                    <div className="artistsTitle">
-                        <h1>My Top Artists</h1>
-                    </div>  
-
                 </div>       
 
                 <div>
