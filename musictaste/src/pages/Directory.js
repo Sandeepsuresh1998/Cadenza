@@ -1,11 +1,11 @@
 import React, { Component } from 'react'
 import axios from 'axios'
 import ProfilePreview from '../components/ProfilePreview'
-import '../styles/Directory.css';
 import { Link, useHistory } from "react-router-dom";
 import querystring from 'querystring';
 import {connect} from 'react-redux';
 import {HouseFill, BoxArrowLeft} from 'react-bootstrap-icons';
+import '../styles/Directory.css';
 
 class Directory extends Component {
     constructor(props) {
@@ -72,18 +72,20 @@ class Directory extends Component {
                         <BoxArrowLeft color="#F8F8FF" size={35}/>
                     </Link>
                 </div>
-                <h1>Directory</h1>
+                <div>
+                    <h1>Directory</h1>
+                </div>
                 <div className="listContainer"> 
-                    <ul>
+                    <ul className="gridContainer">
                             {this.state.users.map(user => 
                                 (
-                                    <div>
+                                    <div className="profileItem">
                                         <button key={user.userId} id={user.userId} onClick={e => this.handleProfileClick(e.target.id)}>
                                             <ProfilePreview name={user.name} userId={user.userId} img={user.img}/> 
                                         </button>
                                     </div>                               
                                 )
-                            )}    
+                            )} 
                     </ul>
                 </div>
             </div>
