@@ -15,8 +15,8 @@ import "../styles/Home.css";
 const Bounce = styled.div`animation: 2s ${keyframes`${bounce}`}`;
 const FadeInRight = styled.div`animation: 2s ${keyframes`${fadeInRight}`}`;
 
-//axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
-axios.defaults.baseURL = "http://localhost:8888";
+axios.defaults.baseURL = "https://spotifybackend.herokuapp.com"
+// axios.defaults.baseURL = "http://localhost:8888";
 
 
 
