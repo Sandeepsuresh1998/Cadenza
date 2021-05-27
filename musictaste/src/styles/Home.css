@@ -1,5 +1,9 @@
+.body {
+    overflow-x: scroll;
+}
 .root {
     display: flex;
+    overflow-x: scroll;
     background: linear-gradient(-45deg, #ee7752, #be2560, #23a6d5, #2326d5);
     background-size: 400% 400%;
     animation: gradient 20s ease infinite;
@@ -21,6 +25,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-align: center;
     padding-top: 25px;
     margin: 0
 }
@@ -65,7 +70,7 @@
     align-items: center;
 }
 .tracksTitle h1 {
-    font-size: 7vw;
+    font-size: 10ex;
 }
 
 .artistsContainer {
@@ -79,6 +84,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    text-align: center;
     width: 50%;
 }
 
@@ -91,11 +97,9 @@
 }
 
 .artistsTitle h1 {
-    font-size: 7vw;
+    font-size: 10ex;
     padding-left: 50px;
 }
-
-
 
 .buttonContainer {
     display: flex;

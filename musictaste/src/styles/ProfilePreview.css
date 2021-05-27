@@ -6,12 +6,13 @@
 }
 
 .profileContainer img {
-    width: 80px;
-    height: 80px;
-    border-radius: 40px;
+    width: 8ex;
+    height: 8ex;
+    border-radius: 4ex;
     pointer-events: none;
 }
 
 .profileContainer h1 {
+    font-size: 4ex;
     pointer-events: none;
 }
