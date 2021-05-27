@@ -2,12 +2,10 @@ import React, { Component } from 'react'
 import queryString from 'query-string';
 import axios from 'axios'
 import TrackPreview from '../components/TrackPreview';
+import Navbar from '../components/Navbar';
 import "../styles/Shared.css";
 import ArtistPreview from '../components/ArtistPreview';
 import {connect} from 'react-redux';
-import {HouseFill, BoxArrowLeft, PersonLinesFill} from 'react-bootstrap-icons';
-import { Link, useHistory } from "react-router-dom";
-
 
 class Shared extends Component {
     constructor(props) {
@@ -70,18 +68,7 @@ class Shared extends Component {
     render() {
         return (
             <div className="root">
-                <div className="navContainer">
-                    <Link className="navIcons" to={"/Home?listener="+this.props.user.userId}>
-                        <HouseFill color="#F8F8FF"size={35}/>
-                    </Link>
-                    <Link to="/Directory">
-                        <PersonLinesFill className="navIcons" color="#F8F8FF" size={35} />
-                    </Link>
-                    <Link to="/" onClick={this.handleLogoutClick}>
-                        <BoxArrowLeft className="navIcons" color="#F8F8FF" size={35}/>
-                    </Link>
-                </div>
-                
+                <Navbar userId={this.props.user.userId}/>
                 <div className="headerContainer">
                     <div className="profileContainer">
                         <div className="profilePics">

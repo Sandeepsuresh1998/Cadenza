@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import ProfilePreview from '../components/ProfilePreview'
-import { Link, useHistory } from "react-router-dom";
+import React, { Component } from 'react';
+import axios from 'axios';
+import ProfilePreview from '../components/ProfilePreview';
+import Navbar from '../components/Navbar';
 import querystring from 'querystring';
 import {connect} from 'react-redux';
 import {HouseFill, BoxArrowLeft, PersonLinesFill} from 'react-bootstrap-icons';
@@ -64,17 +64,7 @@ class Directory extends Component {
     render() {
         return (
             <div className="root">
-                <div className="navContainer">
-                    <Link className="navIcons" to={"/Home?listener="+this.props.user.userId}>
-                        <HouseFill color="#F8F8FF"size={35}/>
-                    </Link>
-                    <Link to="/Directory">
-                        <PersonLinesFill className="navIcons" color="#F8F8FF" size={35} />
-                    </Link>
-                    <Link to="/" onClick={this.handleLogoutClick}>
-                        <BoxArrowLeft className="navIcons" color="#F8F8FF" size={35}/>
-                    </Link>
-                </div>
+                <Navbar userId={this.props.user.userId}/>
                 <div>
                     <h1>Directory</h1>
                 </div>

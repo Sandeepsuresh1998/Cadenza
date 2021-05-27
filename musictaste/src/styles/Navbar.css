@@ -1,0 +1,14 @@
+.navContainer {
+    height: 40px;
+    margin: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
+
+.navIcons {
+    margin-right: 10px;
+}

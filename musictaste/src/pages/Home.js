@@ -4,12 +4,10 @@ import axios from 'axios';
 import styled, { keyframes } from 'styled-components';
 import TrackPreview from '../components/TrackPreview';
 import ArtistPreview from '../components/ArtistPreview';
-import ScrollAnimation from 'react-animate-on-scroll'
+import Navbar from '../components/Navbar';
 import {bounce, fadeInRight} from 'react-animations';
-import { Link, useHistory } from "react-router-dom";
 import {connect} from 'react-redux';
 import {login, logout} from '../actions/userActions';
-import {HouseFill, BoxArrowLeft, VolumeUp, PersonLinesFill} from 'react-bootstrap-icons';
 import "../styles/Home.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -208,25 +206,11 @@ class Home extends Component {
         })
     }
 
-    handleLogoutClick = () => {
-        this.props.logout();
-    }
-
     render() {
         return (
             <div className="root">
-                <div className="navContainer">
-                    <Link to={"/Home?listener="+this.props.user.userId}>
-                        <HouseFill className="navIcons" color="#F8F8FF"size={35}/>
-                    </Link>
-                    <Link to="/Directory">
-                        <PersonLinesFill className="navIcons" color="#F8F8FF" size={35} />
-                    </Link>
-                    <Link to="/" onClick={this.handleLogoutClick}>
-                        <BoxArrowLeft className="navIcons" color="#F8F8FF" size={35}/>
-                    </Link>
-                    
-                </div>
+
+                <Navbar userId={this.props.user.userId}/>
                 
                 <div className="headerContainer">
                     {/* Personal Info */}
@@ -298,15 +282,6 @@ class Home extends Component {
                         <h1>My Top Artists</h1>
                     </div>  
                 </div>                                   
-                            
-                {/* <div className="buttonContainer">
-                    <Link to="/Directory">
-                        <button className="directoryButton">
-                            Find Friends
-                        </button>
-                    </Link>
-                </div> */}
-
             </div>
         ) 
     }
