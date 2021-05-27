@@ -9,7 +9,7 @@ import {bounce, fadeInRight} from 'react-animations';
 import { Link, useHistory } from "react-router-dom";
 import {connect} from 'react-redux';
 import {login, logout} from '../actions/userActions';
-import {HouseFill, BoxArrowLeft} from 'react-bootstrap-icons';
+import {HouseFill, BoxArrowLeft, VolumeUp, PersonLinesFill} from 'react-bootstrap-icons';
 import "../styles/Home.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -217,18 +217,22 @@ class Home extends Component {
             <div className="root">
                 <div className="navContainer">
                     <Link to={"/Home?listener="+this.props.user.userId}>
-                        <HouseFill color="#F8F8FF"size={35}/>
+                        <HouseFill className="navIcons" color="#F8F8FF"size={35}/>
+                    </Link>
+                    <Link to="/Directory">
+                        <PersonLinesFill className="navIcons" color="#F8F8FF" size={35} />
                     </Link>
                     <Link to="/" onClick={this.handleLogoutClick}>
-                        <BoxArrowLeft color="#F8F8FF" size={35}/>
+                        <BoxArrowLeft className="navIcons" color="#F8F8FF" size={35}/>
                     </Link>
+                    
                 </div>
                 
                 <div className="headerContainer">
                     {/* Personal Info */}
                     <div className="info">
                         {/* <img className="profile" src={this.state.image} /> */}
-                        <h1>{this.state.name}</h1>
+                        <h1>{this.state.name + "'s" + " Music"}</h1>
                         {this.state.userId != this.props.user.userId ? 
                             <button 
                                 id={this.state.userId}
@@ -241,6 +245,20 @@ class Home extends Component {
                     </div>
                     
                 </div>
+
+                {this.state.isPlaying ?
+                    <div className="nowPlaying">                        
+                        <TrackPreview 
+                            name={this.state.currenlyPlaying.name} 
+                            album_img={this.state.currenlyPlaying.album_img}
+                            artists={this.state.currenlyPlaying.artists}
+                            link={this.state.currenlyPlaying.link}
+                        /> 
+                        {/* <VolumeUp className="volumeIcon" size={40}/> */}
+                    </div>     
+                    :
+                    null
+                }
                     
                 {/* Top Tracks Note: Currently Short Term */}
                 <div className="tracksContainer">
@@ -279,27 +297,15 @@ class Home extends Component {
                     <div className="artistsTitle">
                         <h1>My Top Artists</h1>
                     </div>  
-                </div>       
-
-                <div>
-                    {this.state.isPlaying ?
-                        <TrackPreview 
-                            name={this.state.currenlyPlaying.name} 
-                            album_img={this.state.currenlyPlaying.album_img}
-                            artists={this.state.currenlyPlaying.artists}
-                            link={this.state.currenlyPlaying.link}
-                        /> :
-                        null
-                    }
-                </div>             
+                </div>                                   
                             
-                <div className="buttonContainer">
+                {/* <div className="buttonContainer">
                     <Link to="/Directory">
                         <button className="directoryButton">
                             Find Friends
                         </button>
                     </Link>
-                </div>
+                </div> */}
 
             </div>
         ) 

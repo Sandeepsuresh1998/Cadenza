@@ -48,6 +48,10 @@
     height: 10%;
     margin: 0;
 }
+
+.profileItem:hover  {
+    color: black;
+}
 .navContainer {
     height: 40px;
     margin: 10px;
@@ -56,7 +60,10 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-start;
+}
+.navIcons {
+    margin-right: 10px;
 }
 
 button {
@@ -69,5 +76,5 @@ button:hover {
 }
 
 button:hover h1 {
-    color: #ffff;
+    color: #ffffff !important;
 }
